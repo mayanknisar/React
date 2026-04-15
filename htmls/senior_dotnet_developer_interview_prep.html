@@ -1,0 +1,481 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:1rem 0;font-family:var(--font-sans)}
+.hero{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1.25rem 1.5rem;margin-bottom:1.5rem;border:0.5px solid var(--color-border-tertiary);display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap}
+.hero-left h1{font-size:20px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.hero-left p{font-size:13px;color:var(--color-text-secondary);line-height:1.5}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.pill{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500}
+.p-blue{background:#E6F1FB;color:#0C447C}
+.p-purple{background:#EEEDFE;color:#3C3489}
+.p-teal{background:#E1F5EE;color:#085041}
+.p-amber{background:#FAEEDA;color:#633806}
+.p-coral{background:#FAECE7;color:#712B13}
+.p-green{background:#EAF3DE;color:#27500A}
+.stats{display:flex;gap:12px;flex-wrap:wrap}
+.stat{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 16px;text-align:center;min-width:70px}
+.stat-n{font-size:22px;font-weight:500;color:var(--color-text-primary)}
+.stat-l{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.25rem}
+.tab{font-size:12px;padding:5px 12px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;transition:all 0.15s}
+.tab:hover{background:var(--color-background-secondary)}
+.tab.active{background:#E6F1FB;color:#0C447C;border-color:#B5D4F4;font-weight:500}
+.section{display:none}
+.section.active{display:block}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:1rem;overflow:hidden}
+.card-hdr{padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.card-hdr:hover{background:var(--color-background-secondary)}
+.card-title{font-size:14px;font-weight:500;color:var(--color-text-primary);line-height:1.4}
+.card-meta{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap}
+.chev{font-size:11px;color:var(--color-text-tertiary);transition:transform 0.2s;flex-shrink:0;margin-top:2px}
+.card.open .chev{transform:rotate(180deg)}
+.card-body{display:none;border-top:0.5px solid var(--color-border-tertiary)}
+.card.open .card-body{display:block}
+.qa{padding:14px 16px}
+.q-row{display:flex;gap:10px;margin-bottom:10px}
+.q-badge{background:#EEEDFE;color:#3C3489;font-size:11px;font-weight:500;padding:3px 8px;border-radius:var(--border-radius-md);flex-shrink:0;height:fit-content;margin-top:1px}
+.a-badge{background:#E1F5EE;color:#085041;font-size:11px;font-weight:500;padding:3px 8px;border-radius:var(--border-radius-md);flex-shrink:0;height:fit-content;margin-top:1px}
+.q-text{font-size:14px;font-weight:500;color:var(--color-text-primary);line-height:1.5}
+.a-text{font-size:13px;color:var(--color-text-secondary);line-height:1.75}
+.divider{height:0.5px;background:var(--color-border-tertiary);margin:12px 0}
+pre{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 12px;font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);overflow-x:auto;white-space:pre;margin:8px 0;line-height:1.6}
+.kw{color:#185FA5;font-weight:500}
+.cm{color:#888780;font-style:italic}
+.tip{background:#FAEEDA;border-left:3px solid #BA7517;border-radius:0;padding:9px 12px;margin:10px 0;font-size:12px;color:#633806;line-height:1.6}
+.warn{background:#E6F1FB;border-left:3px solid #185FA5;border-radius:0;padding:9px 12px;margin:10px 0;font-size:12px;color:#0C447C;line-height:1.6}
+.star{color:#BA7517;font-size:12px}
+</style>
+
+<div class="wrap">
+<h2 class="sr-only">Interview preparation guide for Senior .NET Web Developer role covering all JD requirements</h2>
+
+<div class="hero">
+  <div class="hero-left">
+    <h1>Senior .NET Web Developer — Interview Prep</h1>
+    <p>Tailored to the JD: .NET 8, Blazor, Azure, EF Core, AI tools, clean architecture, microservices</p>
+    <div class="pills">
+      <span class="pill p-blue">.NET 8 / C#</span>
+      <span class="pill p-purple">Blazor</span>
+      <span class="pill p-teal">Azure</span>
+      <span class="pill p-amber">AI tools</span>
+      <span class="pill p-coral">Architecture</span>
+      <span class="pill p-green">EF Core / SQL</span>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-n">8</div><div class="stat-l">Topics</div></div>
+    <div class="stat"><div class="stat-n">32</div><div class="stat-l">Questions</div></div>
+    <div class="stat"><div class="stat-n">7+</div><div class="stat-l">Yrs req.</div></div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="sw('dotnet')">C# / .NET 8</button>
+  <button class="tab" onclick="sw('blazor')">Blazor</button>
+  <button class="tab" onclick="sw('efcore')">EF Core & SQL</button>
+  <button class="tab" onclick="sw('azure')">Azure & DevOps</button>
+  <button class="tab" onclick="sw('arch')">Architecture</button>
+  <button class="tab" onclick="sw('ai')">AI Tools</button>
+  <button class="tab" onclick="sw('testing')">Testing & APIs</button>
+  <button class="tab" onclick="sw('behav')">Behavioural</button>
+</div>
+
+<div id="dotnet" class="section active">
+
+  <div class="card" id="d1">
+    <div class="card-hdr" onclick="tog('d1')">
+      <div>
+        <div class="card-title">What are the most significant improvements in .NET 8 over previous versions?</div>
+        <div class="card-meta"><span class="pill p-blue">Core</span><span class="star">★ High priority</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">.NET 8 is an LTS release with several headline improvements: Native AOT compilation for faster startup and smaller binaries (key for Azure Functions / containers). Frozen collections for read-only, high-performance data structures. Improved System.Text.Json with source-gen serialization reducing reflection overhead. Primary constructors in C# 12 reducing boilerplate. Keyed dependency injection for registering multiple implementations of the same interface. Blazor Unified model combining Server and WASM rendering modes per-component. Performance across the runtime (SIMD, JIT, GC) consistently benchmarks 10–20% faster than .NET 7.</span></div>
+      <div class="tip"><b>JD angle:</b> The role specifies .NET 8+ — mention LTS stability, Blazor United improvements, and keyed DI as things directly impacting your day-to-day work.</div>
+    </div></div>
+  </div>
+
+  <div class="card" id="d2">
+    <div class="card-hdr" onclick="tog('d2')">
+      <div>
+        <div class="card-title">Explain async/await and common pitfalls in high-throughput enterprise applications</div>
+        <div class="card-meta"><span class="pill p-blue">Core</span><span class="star">★ High priority</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">async/await wraps the Task Parallel Library allowing non-blocking I/O without manual thread management. The compiler rewrites the method as a state machine. Key pitfalls in enterprise apps: (1) async void — swallows exceptions; always use async Task. (2) .Result / .Wait() deadlocks in ASP.NET contexts — always await. (3) ConfigureAwait(false) in library code to avoid capturing the synchronisation context unnecessarily. (4) Not cancelling long-running operations — always accept and honour CancellationToken. (5) Unbounded parallelism — use SemaphoreSlim or Channel&lt;T&gt; to throttle concurrent work rather than firing thousands of Tasks.</span></div>
+<pre><span class="cm">// Good pattern for cancellable, throttled bulk work</span>
+<span class="kw">public async</span> Task ProcessBatchAsync(
+    IEnumerable&lt;int&gt; ids, CancellationToken ct)
+{
+    <span class="kw">var</span> sem = <span class="kw">new</span> SemaphoreSlim(<span class="num">10</span>); <span class="cm">// max 10 concurrent</span>
+    <span class="kw">var</span> tasks = ids.Select(<span class="kw">async</span> id => {
+        <span class="kw">await</span> sem.WaitAsync(ct);
+        <span class="kw">try</span> { <span class="kw">await</span> ProcessOneAsync(id, ct); }
+        <span class="kw">finally</span> { sem.Release(); }
+    });
+    <span class="kw">await</span> Task.WhenAll(tasks);
+}</pre>
+    </div></div>
+  </div>
+
+  <div class="card" id="d3">
+    <div class="card-hdr" onclick="tog('d3')">
+      <div>
+        <div class="card-title">What is the difference between IEnumerable, IQueryable, and IAsyncEnumerable?</div>
+        <div class="card-meta"><span class="pill p-blue">Core</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">IEnumerable&lt;T&gt; executes in-memory — once data is pulled from the database it iterates in the application process. IQueryable&lt;T&gt; builds an expression tree that is translated to SQL and executed on the database server — filtering and projection happen in the DB, not in memory. Critical for EF Core: always filter before materialising with ToList(). IAsyncEnumerable&lt;T&gt; (C# 8+) enables async streaming — yielding items one-by-one as they arrive without buffering the full result set, ideal for large result sets or server-sent events. EF Core supports it via ToAsyncEnumerable() and await foreach.</span></div>
+    </div></div>
+  </div>
+
+  <div class="card" id="d4">
+    <div class="card-hdr" onclick="tog('d4')">
+      <div>
+        <div class="card-title">How does Dependency Injection work in .NET 8 and what is keyed DI?</div>
+        <div class="card-meta"><span class="pill p-blue">Core</span><span class="star">★ High priority</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">The built-in DI container in ASP.NET Core registers services in Program.cs and resolves them via constructor injection. Lifetimes: Singleton (one per process), Scoped (one per HTTP request), Transient (new per injection). Keyed DI (.NET 8) solves the problem of needing multiple implementations of the same interface — you register with a key and resolve with [FromKeyedServices] or GetRequiredKeyedService&lt;T&gt;.</span></div>
+<pre><span class="cm">// Register two INotificationService implementations</span>
+builder.Services.AddKeyedScoped&lt;INotificationService, EmailService&gt;(<span class="str">"email"</span>);
+builder.Services.AddKeyedScoped&lt;INotificationService, SmsService&gt;(<span class="str">"sms"</span>);
+
+<span class="cm">// Resolve by key in constructor</span>
+<span class="kw">public class</span> OrderService(
+    [FromKeyedServices(<span class="str">"email"</span>)] INotificationService emailSvc,
+    [FromKeyedServices(<span class="str">"sms"</span>)]   INotificationService smsSvc) { }</pre>
+    </div></div>
+  </div>
+
+</div>
+
+<div id="blazor" class="section">
+
+  <div class="card" id="b1">
+    <div class="card-hdr" onclick="tog('b1')">
+      <div>
+        <div class="card-title">Explain the Blazor render modes in .NET 8 and when you'd choose each</div>
+        <div class="card-meta"><span class="pill p-purple">Blazor</span><span class="star">★ High priority</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">.NET 8 introduced per-component render modes under the Blazor United model: Static SSR — HTML rendered server-side, no interactivity, best for SEO-heavy pages. Interactive Server — component runs on server with SignalR, low initial load, requires persistent connection, suits internal enterprise dashboards. Interactive WebAssembly — runs in browser after download, no server connection needed post-load, suits offline or high-interactivity scenarios. Interactive Auto — starts as Server while WASM downloads, then switches to WASM silently. For this enterprise JD, Interactive Server is the practical default for LOB apps — it avoids large WASM downloads on corporate networks and keeps sensitive business logic server-side.</span></div>
+      <div class="tip"><b>JD angle:</b> The JD specifically calls out "Blazor Server" — know the trade-offs: SignalR dependency, server memory per user, but excellent for authenticated enterprise intranet apps.</div>
+    </div></div>
+  </div>
+
+  <div class="card" id="b2">
+    <div class="card-hdr" onclick="tog('b2')">
+      <div>
+        <div class="card-title">How do you handle state management in a complex Blazor enterprise application?</div>
+        <div class="card-meta"><span class="pill p-purple">Blazor</span><span class="star">★ High priority</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">For enterprise apps I use a layered approach: Component-local state (fields/properties in @code) for UI-only concerns. Scoped service state containers for cross-component state within a user session — a plain C# class with an event Action OnChange, injected as Scoped DI, components subscribe in OnInitialized and unsubscribe in Dispose. URL/query string state via NavigationManager for shareable, bookmark-able state. Cascading parameters for theme or auth context flowing the full tree. For complex scenarios (shopping cart, wizard flow) I've used Fluxor — a Redux-inspired library that gives unidirectional data flow and time-travel debugging.</span></div>
+    </div></div>
+  </div>
+
+  <div class="card" id="b3">
+    <div class="card-hdr" onclick="tog('b3')">
+      <div>
+        <div class="card-title">How do you optimise Blazor rendering performance for data-heavy enterprise screens?</div>
+        <div class="card-meta"><span class="pill p-purple">Blazor</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">Key techniques I apply: (1) Virtualise long lists with &lt;Virtualize&gt; — only renders visible rows, essential for ERP grids with thousands of records. (2) Override ShouldRender() on stable child components to skip unnecessary diffs. (3) Use @key on list items so the diffing algorithm tracks identity correctly on reorder/insert. (4) Break large pages into smaller focused components — only the changed subtree re-renders. (5) Prefer EventCallback over Action — it auto-calls StateHasChanged on the right component, avoiding double renders. (6) Debounce rapid input events (search-as-you-type) with a timer before triggering API calls.</span></div>
+    </div></div>
+  </div>
+
+  <div class="card" id="b4">
+    <div class="card-hdr" onclick="tog('b4')">
+      <div>
+        <div class="card-title">Describe your approach to forms and validation in Blazor for enterprise data entry</div>
+        <div class="card-meta"><span class="pill p-purple">Blazor</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">I use EditForm with an EditContext for full control. For validation: Data Annotations on the model for simple rules, FluentValidation for complex cross-field rules and async validation (checking username availability). I bind &lt;InputText&gt;, &lt;InputNumber&gt;, &lt;InputSelect&gt; components so they participate in the validation pipeline automatically. For enterprise multi-step wizards I maintain a shared EditContext across steps so validation state persists between pages. I wire OnValidSubmit for the happy path and handle server-side validation errors by adding messages to the ValidationMessageStore manually after API responses return business rule failures.</span></div>
+    </div></div>
+  </div>
+
+</div>
+
+<div id="efcore" class="section">
+
+  <div class="card" id="ef1">
+    <div class="card-hdr" onclick="tog('ef1')">
+      <div>
+        <div class="card-title">How do you optimise EF Core queries to avoid N+1 and over-fetching in enterprise apps?</div>
+        <div class="card-meta"><span class="pill p-green">EF Core</span><span class="star">★ High priority</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">N+1 is the biggest EF Core trap — loading a list then accessing a navigation property per row triggers a query per row. Fix with eager loading (Include/ThenInclude) or explicit loading where needed. Over-fetching (pulling full entities when you need two columns) wastes memory and I/O — use projection: Select(x => new CustomerDto { Id = x.Id, Name = x.Name }). Other optimisations: AsNoTracking() for read-only queries (no change tracker overhead). Split queries for large Include chains to avoid cartesian explosion. Compiled queries for hot paths. EnableSensitiveDataLogging + logging to catch unexpected query patterns in development. For bulk operations, skip EF entirely and use Dapper or EF Core's ExecuteUpdate/ExecuteDelete (EF 7+) to avoid loading entities just to update them.</span></div>
+<pre><span class="cm">// ExecuteUpdate — no entity load required (EF 7+)</span>
+<span class="kw">await</span> ctx.Orders
+    .Where(o => o.Status == OrderStatus.Pending &amp;&amp; o.CreatedAt &lt; cutoff)
+    .ExecuteUpdateAsync(s => s.SetProperty(o => o.Status, OrderStatus.Expired));</pre>
+    </div></div>
+  </div>
+
+  <div class="card" id="ef2">
+    <div class="card-hdr" onclick="tog('ef2')">
+      <div>
+        <div class="card-title">Explain your approach to database migrations in a CI/CD pipeline</div>
+        <div class="card-meta"><span class="pill p-green">SQL / DevOps</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">I treat migrations as code — they live in the repository alongside application code. In the CI pipeline I run dotnet ef migrations script --idempotent to generate a SQL script (not Database.Migrate() at runtime — too risky in production). In the CD pipeline, that SQL script is applied to the target environment by the pipeline service account with limited permissions. For ERP integrations I follow expand-contract pattern: Phase 1 (expand) adds new columns as nullable. Phase 2 deploys app code that reads/writes the new column. Phase 3 (contract) makes the column non-nullable or removes the old one. This ensures zero-downtime deployments with rolling deploys.</span></div>
+    </div></div>
+  </div>
+
+  <div class="card" id="ef3">
+    <div class="card-hdr" onclick="tog('ef3')">
+      <div>
+        <div class="card-title">How do you implement the Repository pattern with EF Core — and should you?</div>
+        <div class="card-meta"><span class="pill p-green">EF Core</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">DbContext is already a Unit of Work and DbSet&lt;T&gt; is already a repository — wrapping them in another repository layer often adds indirection without value, especially since IQueryable composability is lost. My view: use the repository pattern when you need to abstract away the data store for testability or when genuinely switching providers. In practice, I inject DbContext directly in application services and use Specification pattern for reusable query logic. For testing, I use an in-memory SQLite database or mock DbContext with EF Core's UseInMemoryDatabase — which is sufficient for most unit tests without a full repository abstraction.</span></div>
+      <div class="warn"><b>Stand-out answer:</b> Showing you understand the trade-offs rather than blindly applying the pattern demonstrates senior-level thinking that interviewers value.</div>
+    </div></div>
+  </div>
+
+</div>
+
+<div id="azure" class="section">
+
+  <div class="card" id="az1">
+    <div class="card-hdr" onclick="tog('az1')">
+      <div>
+        <div class="card-title">Describe how you would architect a .NET solution on Azure for a high-availability enterprise app</div>
+        <div class="card-meta"><span class="pill p-teal">Azure</span><span class="star">★ High priority</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">For the stack in this JD: Front-end Blazor hosted on Azure App Service with deployment slots for blue/green deploys and auto-scaling rules. Background processing via Azure Functions (consumption or premium plan depending on latency needs). Async decoupling through Azure Service Bus — orders or integration events between microservices. Azure SQL with geo-redundant backup and read replicas for reporting queries. Secrets in Azure Key Vault — never in appsettings. Managed Identity for all Azure service-to-service auth, eliminating connection string secrets. Azure Application Insights for distributed tracing across App Service and Functions. For Blazor Server specifically: sticky sessions on App Service load balancer to keep SignalR circuits on the same instance, or Azure SignalR Service to remove that constraint and allow full horizontal scaling.</span></div>
+    </div></div>
+  </div>
+
+  <div class="card" id="az2">
+    <div class="card-hdr" onclick="tog('az2')">
+      <div>
+        <div class="card-title">Walk me through a CI/CD pipeline you would set up with Azure DevOps for this role</div>
+        <div class="card-meta"><span class="pill p-teal">DevOps</span><span class="star">★ High priority</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">CI pipeline (triggered on PR and main branch merge): restore → build → run unit + integration tests → code coverage gate (e.g. 80%) → SonarQube / security scan → publish artifact. CD pipeline (release stages with approval gates): Deploy to Dev (automatic) → Integration/E2E tests → Deploy to UAT (manual approval from QA) → smoke tests → Deploy to Production (change board approval) using deployment slots for zero-downtime swap. Infrastructure as Code with Bicep/Terraform in the same repo so environment changes go through the same review process. Branch strategy: GitFlow or trunk-based with feature flags — I prefer trunk-based with feature flags for enterprise as it avoids long-lived merge conflicts.</span></div>
+    </div></div>
+  </div>
+
+  <div class="card" id="az3">
+    <div class="card-hdr" onclick="tog('az3')">
+      <div>
+        <div class="card-title">How have you used Azure Service Bus in enterprise application integration?</div>
+        <div class="card-meta"><span class="pill p-teal">Azure</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">Service Bus decouples services and handles reliability at the messaging layer. Key patterns I've used: Topics/subscriptions for pub-sub — an OrderPlaced event published once, consumed independently by Fulfilment, Billing, and Notification services. Dead-letter queues — messages that fail processing after max retries land there for investigation rather than being lost. Deferred messages for scheduled processing. Sessions for ordered processing of related messages (e.g. all events for a given order processed in sequence). In .NET I use the Azure.Messaging.ServiceBus SDK with IHostedService for long-running consumers. For ERP integration (Dynamics 365), Service Bus acts as the buffer between D365 business events and our .NET microservices, handling back-pressure when D365 APIs are rate-limited.</span></div>
+    </div></div>
+  </div>
+
+</div>
+
+<div id="arch" class="section">
+
+  <div class="card" id="ar1">
+    <div class="card-hdr" onclick="tog('ar1')">
+      <div>
+        <div class="card-title">Explain Clean Architecture and how you apply it in a .NET enterprise solution</div>
+        <div class="card-meta"><span class="pill p-coral">Architecture</span><span class="star">★ High priority</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">Clean Architecture organises code into concentric layers where dependencies only point inward: Domain (entities, value objects, domain events — zero external dependencies) → Application (use cases, interfaces, DTOs, MediatR handlers — depends only on Domain) → Infrastructure (EF Core, Azure SDKs, HTTP clients — implements interfaces defined in Application) → Presentation (Blazor components, API controllers — depends on Application). The key rule: Infrastructure depends on Application, never the reverse. This means you can swap SQL Server for Cosmos DB or replace Blazor with an API without touching business logic. In practice I use MediatR for the Application layer — each use case is a Command or Query handler, keeping controllers/components thin.</span></div>
+<pre><span class="cm">// Application layer — no infrastructure knowledge</span>
+<span class="kw">public record</span> CreateOrderCommand(Guid CustomerId, List&lt;OrderLine&gt; Lines)
+    : IRequest&lt;OrderId&gt;;
+
+<span class="kw">public class</span> CreateOrderHandler(IOrderRepository repo, IEventBus bus)
+    : IRequestHandler&lt;CreateOrderCommand, OrderId&gt;
+{
+    <span class="kw">public async</span> Task&lt;OrderId&gt; Handle(CreateOrderCommand cmd, CancellationToken ct)
+    {
+        <span class="kw">var</span> order = Order.Create(cmd.CustomerId, cmd.Lines);
+        <span class="kw">await</span> repo.AddAsync(order, ct);
+        <span class="kw">await</span> bus.PublishAsync(<span class="kw">new</span> OrderCreatedEvent(order.Id), ct);
+        <span class="kw">return</span> order.Id;
+    }
+}</pre>
+    </div></div>
+  </div>
+
+  <div class="card" id="ar2">
+    <div class="card-hdr" onclick="tog('ar2')">
+      <div>
+        <div class="card-title">What is CQRS and when would you apply it in this type of enterprise context?</div>
+        <div class="card-meta"><span class="pill p-coral">Architecture</span><span class="star">★ High priority</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">CQRS separates read (Query) from write (Command) models. Commands mutate state and return only an ID or void — they go through the full domain model with validation and business rules. Queries return DTOs optimised for the UI — they can bypass the domain model entirely and hit a read-optimised store or use raw SQL/Dapper for performance. For ERP-adjacent applications in this JD: write side uses EF Core + domain events, read side uses Dapper against read-replica Azure SQL for reporting and dashboard queries. I use MediatR to dispatch both — the Presentation layer doesn't know whether it's sending a command or query. I don't apply CQRS everywhere — simple CRUD screens don't benefit; it's justified when read/write load profiles differ significantly or when the write model is complex.</span></div>
+    </div></div>
+  </div>
+
+  <div class="card" id="ar3">
+    <div class="card-hdr" onclick="tog('ar3')">
+      <div>
+        <div class="card-title">How do you approach microservices decomposition for enterprise LOB applications?</div>
+        <div class="card-meta"><span class="pill p-coral">Architecture</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">I decompose along business capability boundaries (Domain-Driven Design bounded contexts), not technical layers. For a D365-integrated system: Order Management, Customer, Inventory, Finance each become candidates. Key principles: each service owns its data — no shared database. Integration via Service Bus events or REST APIs at defined contracts. Start with a modular monolith — deploy as one unit, structured as independent modules — then extract to separate services only when a module has distinct scaling needs or team ownership. This avoids premature microservices complexity. For the ERP integration scenarios in this JD, I'd build an anti-corruption layer between our bounded context and D365's model so D365 schema changes don't propagate through our domain.</span></div>
+    </div></div>
+  </div>
+
+</div>
+
+<div id="ai" class="section">
+
+  <div class="card" id="ai1">
+    <div class="card-hdr" onclick="tog('ai1')">
+      <div>
+        <div class="card-title">How do you integrate AI-assisted tools like GitHub Copilot or Claude into your development workflow?</div>
+        <div class="card-meta"><span class="pill p-amber">AI Tools</span><span class="star">★ High priority — JD specific</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">I use AI tools as a force multiplier, not a replacement for engineering judgment. GitHub Copilot in VS Code for inline completion and generating boilerplate (DTOs, test scaffolding, mapping code). Claude / Claude Code for architectural discussions, code review, explaining legacy code, and drafting technical documentation — it handles context windows large enough for whole files. Azure OpenAI for building AI features into the product itself — semantic search over business data, document summarisation in the Blazor UI. My workflow: write the intent/interface first, let Copilot suggest the implementation, then critically review — AI-generated code needs the same review rigour as human-written code. I track where AI assistance materially reduced delivery time (typically 30–40% on routine CRUD scaffolding and unit test generation).</span></div>
+      <div class="tip"><b>JD angle:</b> This role explicitly values AI tool experience — give concrete examples and percentages. Mentioning Claude Code directly (it's in their tech stack) scores well.</div>
+    </div></div>
+  </div>
+
+  <div class="card" id="ai2">
+    <div class="card-hdr" onclick="tog('ai2')">
+      <div>
+        <div class="card-title">How would you build an Azure OpenAI feature into a Blazor enterprise application?</div>
+        <div class="card-meta"><span class="pill p-amber">AI Tools</span><span class="star">★ High priority — JD specific</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">I'd use the Microsoft Semantic Kernel SDK — it abstracts Azure OpenAI, handles prompt templating, memory/RAG, and function calling (letting the model invoke your C# services). Architecture: Blazor component captures user query → sends to an Application layer service → Semantic Kernel orchestrates: retrieves relevant documents from Azure AI Search (vector index over business data) → constructs grounded prompt → calls Azure OpenAI gpt-4o → streams response back via IAsyncEnumerable to the Blazor component for real-time display. Key enterprise concerns: content filtering via Azure AI Content Safety, token budget management to control costs, audit logging of all prompts and completions for compliance, and prompt injection defences when processing user-supplied content.</span></div>
+    </div></div>
+  </div>
+
+</div>
+
+<div id="testing" class="section">
+
+  <div class="card" id="t1">
+    <div class="card-hdr" onclick="tog('t1')">
+      <div>
+        <div class="card-title">Describe your testing strategy for a .NET enterprise application end-to-end</div>
+        <div class="card-meta"><span class="pill p-blue">Testing</span><span class="star">★ High priority</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">I follow the test pyramid. Unit tests (NUnit + FluentAssertions + Moq/NSubstitute) for domain logic and application handlers in isolation — fast, no I/O, run on every commit. Integration tests (WebApplicationFactory + testcontainers for real SQL Server in Docker) for API endpoints and EF Core queries against a real database schema — catches mapping and query issues unit tests miss. Component tests for Blazor using bUnit — renders components in-memory, tests event handling and rendering logic without a browser. E2E tests (Playwright) for critical user journeys only — slow, reserved for smoke testing after deployment. For this JD's CI/CD requirement: unit + integration tests gate the PR merge, E2E runs post-deployment to UAT.</span></div>
+    </div></div>
+  </div>
+
+  <div class="card" id="t2">
+    <div class="card-hdr" onclick="tog('t2')">
+      <div>
+        <div class="card-title">How do you design RESTful APIs for enterprise system integration (ERP, CRM)?</div>
+        <div class="card-meta"><span class="pill p-blue">APIs</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">For enterprise integration I follow these practices: versioned APIs (/api/v1/) with deprecation notices before breaking changes — critical when D365 or CRM consume your endpoints. Problem Details (RFC 7807) for consistent error responses across all endpoints. Pagination with cursor-based tokens for large datasets (offset pagination breaks under concurrent inserts). Idempotency keys on mutation endpoints so D365 retries don't create duplicates. OpenAPI/Swagger spec-first or spec-generated with Swashbuckle, shared as a package with consumer teams. Rate limiting middleware (ASP.NET Core RateLimiter in .NET 7+). For outbound calls to D365/CRM I use Polly for retry with exponential back-off and circuit breaker — D365 has rate limits and transient failures are common.</span></div>
+    </div></div>
+  </div>
+
+</div>
+
+<div id="behav" class="section">
+
+  <div class="card" id="bv1">
+    <div class="card-hdr" onclick="tog('bv1')">
+      <div>
+        <div class="card-title">"Tell me about a time you delivered a complex enterprise integration under pressure"</div>
+        <div class="card-meta"><span class="pill p-coral">Behavioural</span><span class="star">★ Must prepare</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span>
+      <span class="a-text"><b>STAR framework template:</b> Situation — "We had a hard go-live for a D365 Finance integration with a key client, 6 weeks out, and the ERP vendor delivered an API spec with breaking changes." Task — "I was the lead developer responsible for the integration layer." Action — "I mapped the delta between old and new spec, prioritised the changes by risk, introduced an anti-corruption layer to isolate D365 schema from our domain, wrote automated contract tests against the new spec, and accelerated delivery by using GitHub Copilot to generate 70% of the mapping boilerplate." Result — "Delivered on time with zero production defects in the first 30 days. The anti-corruption layer later absorbed two more D365 updates without requiring domain changes."</span></div>
+      <div class="tip">Prepare 2–3 STAR stories that touch on: technical complexity, stakeholder management, mentoring juniors, and AI tool usage — this JD values all four.</div>
+    </div></div>
+  </div>
+
+  <div class="card" id="bv2">
+    <div class="card-hdr" onclick="tog('bv2')">
+      <div>
+        <div class="card-title">"How do you mentor junior developers, especially on AI-assisted development?"</div>
+        <div class="card-meta"><span class="pill p-coral">Behavioural</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">I run structured code reviews where I explain the why, not just flag the what — linking back to the architecture principles we've agreed as a team. For AI tools, I've found juniors either over-trust Copilot output or don't use it at all. I establish a "trust but verify" culture: AI-suggested code is a starting point, not a finish line — review it with the same scrutiny as a PR from a colleague. I pair-program new joiners through their first few Claude Code or Copilot sessions, showing how to write good prompts (providing context, constraints, and examples) and how to spot hallucinations in code — especially subtle ones like a plausible-looking API method that doesn't exist in the SDK version we're using.</span></div>
+    </div></div>
+  </div>
+
+  <div class="card" id="bv3">
+    <div class="card-hdr" onclick="tog('bv3')">
+      <div>
+        <div class="card-title">"Where do you see AI changing enterprise software development in the next 2–3 years?"</div>
+        <div class="card-meta"><span class="pill p-coral">Behavioural</span><span class="star">Must prepare</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="q-row"><span class="a-badge">A</span><span class="a-text">The shift I see is from AI as autocomplete to AI as an agent in the development loop. Today we review AI suggestions; soon the AI will run tests, interpret failures, and iterate — Claude Code already does this in agentic mode. For enterprise specifically: AI-assisted requirements translation (natural language spec to test cases), automated regression generation from production traces, and AI-powered monitoring that explains anomalies rather than just alerting on thresholds. The senior developer role shifts toward architecture, prompt engineering, AI output review, and defining guardrails — the judgment layer that AI still lacks. This is exactly why roles like this one are combining deep .NET expertise with explicit AI tool fluency.</span></div>
+      <div class="warn"><b>Why this matters:</b> This JD was written by a team that's already investing in AI — showing you think ahead on this differentiates you from candidates who treat it as a footnote.</div>
+    </div></div>
+  </div>
+
+  <div class="card" id="bv4">
+    <div class="card-hdr" onclick="tog('bv4')">
+      <div>
+        <div class="card-title">Questions you should ask the interviewer</div>
+        <div class="card-meta"><span class="pill p-green">Your questions</span><span class="star">Essential</span></div>
+      </div><span class="chev">▼</span>
+    </div>
+    <div class="card-body"><div class="qa">
+      <div class="a-text" style="line-height:2">
+        1. Which ERP platform are you currently integrating with — D365 F&O, Business Central, or both?<br>
+        2. Is the Blazor application greenfield or are you migrating from an existing technology?<br>
+        3. How is the team currently using AI tools in practice — is Copilot or Claude Code already in the developer workflow?<br>
+        4. What does the on-call / production support expectation look like for this role?<br>
+        5. How do you measure success for a senior developer in the first 6 months — what would "great" look like?<br>
+        6. What's the balance between new feature development and maintaining the existing estate?
+      </div>
+      <div class="tip">Asking about ERP specifics and AI tool adoption shows you've read the JD deeply and are already thinking about day-one impact.</div>
+    </div></div>
+  </div>
+
+</div>
+</div>
+
+<script>
+function sw(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+function tog(id){
+  document.getElementById(id).classList.toggle('open');
+}
+</script>

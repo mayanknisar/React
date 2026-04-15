@@ -1,0 +1,769 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.wrap{padding:1.5rem 0}
+.hero{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1.5rem;margin-bottom:1.5rem;border:0.5px solid var(--color-border-tertiary)}
+.hero h1{font-size:22px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px}
+.hero p{font-size:14px;color:var(--color-text-secondary);line-height:1.6}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.badge{font-size:12px;padding:4px 10px;border-radius:var(--border-radius-md);font-weight:500}
+.b-blue{background:#E6F1FB;color:#0C447C}
+.b-green{background:#EAF3DE;color:#27500A}
+.b-amber{background:#FAEEDA;color:#633806}
+.b-purple{background:#EEEDFE;color:#3C3489}
+.b-coral{background:#FAECE7;color:#712B13}
+.b-teal{background:#E1F5EE;color:#085041}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem}
+.tab{font-size:13px;padding:6px 14px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;transition:all 0.15s}
+.tab:hover{background:var(--color-background-secondary)}
+.tab.active{background:#E6F1FB;color:#0C447C;border-color:#B5D4F4;font-weight:500}
+.section{display:none}
+.section.active{display:block}
+.topic{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:1rem;overflow:hidden}
+.topic-header{padding:14px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.topic-header:hover{background:var(--color-background-secondary)}
+.topic-title{font-size:15px;font-weight:500;color:var(--color-text-primary)}
+.topic-sub{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.chevron{font-size:12px;color:var(--color-text-tertiary);transition:transform 0.2s;flex-shrink:0}
+.topic.open .chevron{transform:rotate(180deg)}
+.topic-body{display:none;padding:0 16px 16px;border-top:0.5px solid var(--color-border-tertiary)}
+.topic.open .topic-body{display:block}
+.concept{margin-top:14px}
+.concept p{font-size:14px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:10px}
+pre{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:12px;font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary);overflow-x:auto;white-space:pre;margin:10px 0;line-height:1.6}
+.kw{color:#185FA5;font-weight:500}
+.cm{color:#888780;font-style:italic}
+.str{color:#3B6D11}
+.num{color:#BA7517}
+.qa-block{margin-top:14px}
+.q-item{margin-bottom:12px}
+.q-label{display:flex;align-items:flex-start;gap:10px;margin-bottom:6px}
+.q-badge{background:#EEEDFE;color:#3C3489;font-size:11px;font-weight:500;padding:3px 8px;border-radius:var(--border-radius-md);flex-shrink:0;margin-top:2px}
+.q-text{font-size:14px;font-weight:500;color:var(--color-text-primary);line-height:1.5}
+.a-label{display:flex;align-items:flex-start;gap:10px}
+.a-badge{background:#E1F5EE;color:#085041;font-size:11px;font-weight:500;padding:3px 8px;border-radius:var(--border-radius-md);flex-shrink:0;margin-top:2px}
+.a-text{font-size:13px;color:var(--color-text-secondary);line-height:1.7}
+.divider{height:0.5px;background:var(--color-border-tertiary);margin:14px 0}
+.tip{background:#FAEEDA;border-left:3px solid #BA7517;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;padding:10px 12px;margin:10px 0;font-size:13px;color:#633806;line-height:1.6}
+.tip b{color:#412402}
+.warn{background:#FCEBEB;border-left:3px solid #E24B4A;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;padding:10px 12px;margin:10px 0;font-size:13px;color:#791F1F}
+.progress{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--color-text-secondary);margin-bottom:1.5rem;flex-wrap:wrap}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.section-count{font-size:12px;color:var(--color-text-tertiary);flex-shrink:0}
+</style>
+
+<div class="wrap">
+<h2 class="sr-only">PL/SQL beginner to advanced guide with concepts and interview questions</h2>
+
+<div class="hero">
+  <h1>PL/SQL — Beginner to Advanced</h1>
+  <p>Concepts, syntax, code examples, and interview questions across every major topic. Click any section to expand.</p>
+  <div class="badges">
+    <span class="badge b-blue">Beginner</span>
+    <span class="badge b-teal">Intermediate</span>
+    <span class="badge b-purple">Advanced</span>
+    <span class="badge b-amber">Interview Ready</span>
+  </div>
+</div>
+
+<div class="tabs" id="tabs">
+  <button class="tab active" onclick="switchTab('fundamentals')">Fundamentals</button>
+  <button class="tab" onclick="switchTab('control')">Control Flow</button>
+  <button class="tab" onclick="switchTab('cursors')">Cursors</button>
+  <button class="tab" onclick="switchTab('exceptions')">Exceptions</button>
+  <button class="tab" onclick="switchTab('procs')">Procedures & Functions</button>
+  <button class="tab" onclick="switchTab('triggers')">Triggers</button>
+  <button class="tab" onclick="switchTab('packages')">Packages</button>
+  <button class="tab" onclick="switchTab('advanced')">Advanced</button>
+</div>
+
+<div id="fundamentals" class="section active">
+
+  <div class="topic" id="t1">
+    <div class="topic-header" onclick="toggle('t1')">
+      <div><div class="topic-title">What is PL/SQL?</div><div class="topic-sub">Language basics, block structure, use cases</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="topic-body">
+      <div class="concept">
+        <p>PL/SQL (Procedural Language / Structured Query Language) is Oracle's procedural extension to SQL. It adds programming constructs — variables, loops, conditions, and exception handling — to the declarative SQL language, allowing complex business logic to run directly in the database.</p>
+        <p>Every PL/SQL program is a <b>block</b> made of up to four sections:</p>
+<pre><span class="kw">DECLARE</span>
+  <span class="cm">-- optional: variables, cursors, exceptions</span>
+  v_name  VARCHAR2(50) := <span class="str">'Oracle'</span>;
+  v_count NUMBER;
+<span class="kw">BEGIN</span>
+  <span class="cm">-- mandatory: executable statements</span>
+  v_count := <span class="num">10</span>;
+  DBMS_OUTPUT.PUT_LINE(<span class="str">'Hello, '</span> || v_name);
+<span class="kw">EXCEPTION</span>
+  <span class="cm">-- optional: error handling</span>
+  <span class="kw">WHEN OTHERS THEN</span>
+    DBMS_OUTPUT.PUT_LINE(<span class="str">'Error: '</span> || SQLERRM);
+<span class="kw">END</span>;
+/</pre>
+        <div class="tip"><b>Key advantage:</b> Reduces network round-trips by bundling multiple SQL calls into one server-side execution unit.</div>
+      </div>
+      <div class="divider"></div>
+      <div class="qa-block">
+        <div class="q-item">
+          <div class="q-label"><span class="q-badge">Q</span><span class="q-text">What is PL/SQL and how does it differ from SQL?</span></div>
+          <div class="a-label"><span class="a-badge">A</span><span class="a-text">SQL is a declarative language used to query and manipulate data — you tell the database <i>what</i> you want. PL/SQL is a procedural extension that lets you express <i>how</i> to do it using variables, conditionals, loops, and exception handlers. It integrates seamlessly with SQL and runs entirely in the Oracle database engine, reducing network overhead and improving performance for complex operations.</span></div>
+        </div>
+        <div class="divider"></div>
+        <div class="q-item">
+          <div class="q-label"><span class="q-badge">Q</span><span class="q-text">What are the sections of a PL/SQL block and which are mandatory?</span></div>
+          <div class="a-label"><span class="a-badge">A</span><span class="a-text">A PL/SQL block has four sections: DECLARE (optional — variables, constants, cursors), BEGIN (mandatory — executable statements), EXCEPTION (optional — error handling), and END (mandatory — closes the block). Only BEGIN...END is required; the rest are optional.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic" id="t2">
+    <div class="topic-header" onclick="toggle('t2')">
+      <div><div class="topic-title">Variables, Data Types & Constants</div><div class="topic-sub">Declaring, initializing, %TYPE, %ROWTYPE</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="topic-body">
+      <div class="concept">
+        <p>Variables are declared in the DECLARE section. PL/SQL supports scalar types, composite types, and anchor types that bind to database column definitions.</p>
+<pre><span class="kw">DECLARE</span>
+  v_salary    NUMBER(10,2) := <span class="num">5000.00</span>;
+  v_name      VARCHAR2(100);
+  v_hired     DATE         := SYSDATE;
+  c_max_sal   CONSTANT NUMBER := <span class="num">100000</span>;
+
+  <span class="cm">-- %TYPE anchors to a column's data type</span>
+  v_emp_sal   employees.salary%TYPE;
+
+  <span class="cm">-- %ROWTYPE holds an entire row</span>
+  v_emp_row   employees%ROWTYPE;
+<span class="kw">BEGIN</span>
+  <span class="kw">SELECT</span> salary <span class="kw">INTO</span> v_emp_sal
+  <span class="kw">FROM</span>   employees
+  <span class="kw">WHERE</span>  employee_id = <span class="num">101</span>;
+
+  <span class="kw">SELECT</span> * <span class="kw">INTO</span> v_emp_row
+  <span class="kw">FROM</span>   employees
+  <span class="kw">WHERE</span>  employee_id = <span class="num">101</span>;
+
+  DBMS_OUTPUT.PUT_LINE(v_emp_row.last_name);
+<span class="kw">END</span>;
+/</pre>
+        <div class="tip"><b>Best practice:</b> Always use %TYPE and %ROWTYPE instead of hardcoding data types. If the column definition changes, your PL/SQL automatically adapts at compile time.</div>
+      </div>
+      <div class="divider"></div>
+      <div class="qa-block">
+        <div class="q-item">
+          <div class="q-label"><span class="q-badge">Q</span><span class="q-text">What is the difference between %TYPE and %ROWTYPE?</span></div>
+          <div class="a-label"><span class="a-badge">A</span><span class="a-text"><b>%TYPE</b> anchors a variable to the data type of a single column (e.g., employees.salary%TYPE gives you a NUMBER matching that column's precision). <b>%ROWTYPE</b> anchors a variable to the full structure of a table row or cursor result — it creates a record with one field per column. Use %TYPE for individual column values and %ROWTYPE when you need to hold or pass an entire row.</span></div>
+        </div>
+        <div class="divider"></div>
+        <div class="q-item">
+          <div class="q-label"><span class="q-badge">Q</span><span class="q-text">What is the difference between VARCHAR2 and CHAR in PL/SQL?</span></div>
+          <div class="a-label"><span class="a-badge">A</span><span class="a-text">CHAR is a fixed-length type — it always uses the full declared length, padding with spaces. VARCHAR2 is variable-length — it only stores the actual characters. For most use cases VARCHAR2 is preferred because it avoids trailing space issues in comparisons. CHAR is only appropriate when values are genuinely fixed-length (e.g., 2-char country codes).</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="control" class="section">
+
+  <div class="topic" id="c1">
+    <div class="topic-header" onclick="toggle('c1')">
+      <div><div class="topic-title">IF / ELSIF / ELSE</div><div class="topic-sub">Conditional branching</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="topic-body">
+      <div class="concept">
+<pre><span class="kw">DECLARE</span>
+  v_score NUMBER := <span class="num">75</span>;
+  v_grade VARCHAR2(2);
+<span class="kw">BEGIN</span>
+  <span class="kw">IF</span> v_score >= <span class="num">90</span> <span class="kw">THEN</span>
+    v_grade := <span class="str">'A'</span>;
+  <span class="kw">ELSIF</span> v_score >= <span class="num">75</span> <span class="kw">THEN</span>
+    v_grade := <span class="str">'B'</span>;
+  <span class="kw">ELSIF</span> v_score >= <span class="num">60</span> <span class="kw">THEN</span>
+    v_grade := <span class="str">'C'</span>;
+  <span class="kw">ELSE</span>
+    v_grade := <span class="str">'F'</span>;
+  <span class="kw">END IF</span>;
+  DBMS_OUTPUT.PUT_LINE(<span class="str">'Grade: '</span> || v_grade);
+<span class="kw">END</span>;
+/</pre>
+      </div>
+      <div class="divider"></div>
+      <div class="qa-block">
+        <div class="q-item">
+          <div class="q-label"><span class="q-badge">Q</span><span class="q-text">What happens if a NULL value is compared in an IF condition?</span></div>
+          <div class="a-label"><span class="a-badge">A</span><span class="a-text">Any comparison involving NULL evaluates to NULL (not TRUE or FALSE) in PL/SQL. An IF condition that evaluates to NULL is treated as FALSE and the ELSE branch executes. Always use IS NULL or IS NOT NULL to explicitly test for NULL values rather than = NULL or != NULL.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic" id="c2">
+    <div class="topic-header" onclick="toggle('c2')">
+      <div><div class="topic-title">Loops — LOOP, WHILE, FOR</div><div class="topic-sub">Basic, while, numeric FOR, cursor FOR</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="topic-body">
+      <div class="concept">
+<pre><span class="cm">-- Basic LOOP (must use EXIT)</span>
+<span class="kw">DECLARE</span> i NUMBER := <span class="num">1</span>; <span class="kw">BEGIN</span>
+  <span class="kw">LOOP</span>
+    DBMS_OUTPUT.PUT_LINE(i);
+    i := i + <span class="num">1</span>;
+    <span class="kw">EXIT WHEN</span> i > <span class="num">5</span>;
+  <span class="kw">END LOOP</span>;
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- WHILE LOOP</span>
+<span class="kw">WHILE</span> i <= <span class="num">10</span> <span class="kw">LOOP</span>
+  i := i + <span class="num">1</span>;
+<span class="kw">END LOOP</span>;
+
+<span class="cm">-- Numeric FOR LOOP (i is implicit, read-only)</span>
+<span class="kw">FOR</span> i <span class="kw">IN</span> <span class="num">1</span>..<span class="num">10</span> <span class="kw">LOOP</span>
+  DBMS_OUTPUT.PUT_LINE(i);
+<span class="kw">END LOOP</span>;
+
+<span class="cm">-- Reverse FOR</span>
+<span class="kw">FOR</span> i <span class="kw">IN REVERSE</span> <span class="num">1</span>..<span class="num">5</span> <span class="kw">LOOP</span>
+  DBMS_OUTPUT.PUT_LINE(i); <span class="cm">-- 5,4,3,2,1</span>
+<span class="kw">END LOOP</span>;</pre>
+      </div>
+      <div class="divider"></div>
+      <div class="qa-block">
+        <div class="q-item">
+          <div class="q-label"><span class="q-badge">Q</span><span class="q-text">Can you modify the loop counter variable in a FOR loop?</span></div>
+          <div class="a-label"><span class="a-badge">A</span><span class="a-text">No. In a numeric FOR loop, the loop counter (e.g., i) is implicitly declared and is read-only within the loop body. Any attempt to assign a value to it results in a compile-time error. If you need a modifiable counter, use a WHILE loop or a LOOP...EXIT WHEN construct with an explicitly declared variable.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="cursors" class="section">
+
+  <div class="topic" id="cur1">
+    <div class="topic-header" onclick="toggle('cur1')">
+      <div><div class="topic-title">Implicit vs Explicit Cursors</div><div class="topic-sub">SQL%ROWCOUNT, OPEN/FETCH/CLOSE</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="topic-body">
+      <div class="concept">
+        <p>A cursor is a pointer to a private SQL work area that holds the result of a query. Implicit cursors are created automatically for single-row SELECT INTO and DML statements. Explicit cursors are declared and controlled manually.</p>
+<pre><span class="cm">-- Implicit cursor attributes</span>
+<span class="kw">BEGIN</span>
+  <span class="kw">UPDATE</span> employees <span class="kw">SET</span> salary = salary * <span class="num">1.1</span>
+  <span class="kw">WHERE</span>  department_id = <span class="num">10</span>;
+  DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT || <span class="str">' rows updated'</span>);
+<span class="kw">END</span>;
+
+<span class="cm">-- Explicit cursor</span>
+<span class="kw">DECLARE</span>
+  <span class="kw">CURSOR</span> c_emp <span class="kw">IS</span>
+    <span class="kw">SELECT</span> employee_id, last_name, salary
+    <span class="kw">FROM</span>   employees
+    <span class="kw">WHERE</span>  department_id = <span class="num">20</span>;
+  v_emp c_emp%ROWTYPE;
+<span class="kw">BEGIN</span>
+  <span class="kw">OPEN</span>  c_emp;
+  <span class="kw">LOOP</span>
+    <span class="kw">FETCH</span> c_emp <span class="kw">INTO</span> v_emp;
+    <span class="kw">EXIT WHEN</span> c_emp%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE(v_emp.last_name);
+  <span class="kw">END LOOP</span>;
+  <span class="kw">CLOSE</span> c_emp;
+<span class="kw">END</span>;
+/</pre>
+        <div class="tip"><b>Shortcut:</b> Cursor FOR loop handles OPEN, FETCH, and CLOSE automatically — prefer it when you don't need manual control.</div>
+<pre><span class="kw">FOR</span> rec <span class="kw">IN</span> (
+  <span class="kw">SELECT</span> last_name, salary <span class="kw">FROM</span> employees <span class="kw">WHERE</span> dept_id = <span class="num">10</span>
+) <span class="kw">LOOP</span>
+  DBMS_OUTPUT.PUT_LINE(rec.last_name || <span class="str">' - '</span> || rec.salary);
+<span class="kw">END LOOP</span>;</pre>
+      </div>
+      <div class="divider"></div>
+      <div class="qa-block">
+        <div class="q-item">
+          <div class="q-label"><span class="q-badge">Q</span><span class="q-text">What are cursor attributes and what do they return?</span></div>
+          <div class="a-label"><span class="a-badge">A</span><span class="a-text"><b>%FOUND</b> — TRUE if the last FETCH returned a row. <b>%NOTFOUND</b> — TRUE if the last FETCH returned no row. <b>%ROWCOUNT</b> — number of rows fetched so far. <b>%ISOPEN</b> — TRUE if the cursor is currently open. For implicit cursors, these apply to the most recent SQL statement. For explicit cursors, they apply to the named cursor. Always check %NOTFOUND inside an explicit cursor loop to avoid infinite iteration.</span></div>
+        </div>
+        <div class="divider"></div>
+        <div class="q-item">
+          <div class="q-label"><span class="q-badge">Q</span><span class="q-text">What happens if you forget to close an explicit cursor?</span></div>
+          <div class="a-label"><span class="a-badge">A</span><span class="a-text">The cursor remains open, consuming memory (cursor slots) in the Oracle shared pool. If enough cursors are left open, you may hit the OPEN_CURSORS limit and receive ORA-01000: maximum open cursors exceeded. Always close cursors when done — ideally in the EXCEPTION section as well so they're closed even on error.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic" id="cur2">
+    <div class="topic-header" onclick="toggle('cur2')">
+      <div><div class="topic-title">Parameterized & REF Cursors</div><div class="topic-sub">Dynamic queries, SYS_REFCURSOR</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="topic-body">
+      <div class="concept">
+<pre><span class="cm">-- Parameterized cursor</span>
+<span class="kw">DECLARE</span>
+  <span class="kw">CURSOR</span> c_dept(p_dept_id NUMBER) <span class="kw">IS</span>
+    <span class="kw">SELECT</span> last_name <span class="kw">FROM</span> employees
+    <span class="kw">WHERE</span>  department_id = p_dept_id;
+<span class="kw">BEGIN</span>
+  <span class="kw">FOR</span> r <span class="kw">IN</span> c_dept(<span class="num">10</span>) <span class="kw">LOOP</span>
+    DBMS_OUTPUT.PUT_LINE(r.last_name);
+  <span class="kw">END LOOP</span>;
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- REF CURSOR (weak type) — return from procedure</span>
+<span class="kw">CREATE OR REPLACE PROCEDURE</span> get_employees(
+  p_dept  IN  NUMBER,
+  p_cur   OUT SYS_REFCURSOR
+) <span class="kw">AS BEGIN</span>
+  <span class="kw">OPEN</span> p_cur <span class="kw">FOR</span>
+    <span class="kw">SELECT</span> * <span class="kw">FROM</span> employees <span class="kw">WHERE</span> department_id = p_dept;
+<span class="kw">END</span>;
+/</pre>
+        <div class="tip"><b>SYS_REFCURSOR</b> is the standard way to return result sets from stored procedures to calling applications (Java, .NET, etc.).</div>
+      </div>
+      <div class="divider"></div>
+      <div class="qa-block">
+        <div class="q-item">
+          <div class="q-label"><span class="q-badge">Q</span><span class="q-text">What is the difference between a strong and weak REF CURSOR?</span></div>
+          <div class="a-label"><span class="a-badge">A</span><span class="a-text">A strong REF CURSOR is declared with a specific return type (RETURN employees%ROWTYPE) — it is type-safe and allows compile-time checking. A weak REF CURSOR (SYS_REFCURSOR or declared without a RETURN clause) can hold any query result but provides no compile-time type checking. Weak cursors are more flexible and commonly used to return dynamic result sets to applications.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="exceptions" class="section">
+
+  <div class="topic" id="ex1">
+    <div class="topic-header" onclick="toggle('ex1')">
+      <div><div class="topic-title">Built-in vs User-Defined Exceptions</div><div class="topic-sub">NO_DATA_FOUND, TOO_MANY_ROWS, RAISE</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="topic-body">
+      <div class="concept">
+<pre><span class="kw">DECLARE</span>
+  v_sal employees.salary%TYPE;
+  e_too_low <span class="kw">EXCEPTION</span>;          <span class="cm">-- user-defined</span>
+<span class="kw">BEGIN</span>
+  <span class="kw">SELECT</span> salary <span class="kw">INTO</span> v_sal
+  <span class="kw">FROM</span>   employees
+  <span class="kw">WHERE</span>  employee_id = <span class="num">999</span>;     <span class="cm">-- may raise NO_DATA_FOUND</span>
+
+  <span class="kw">IF</span> v_sal < <span class="num">1000</span> <span class="kw">THEN</span>
+    <span class="kw">RAISE</span> e_too_low;             <span class="cm">-- raise custom exception</span>
+  <span class="kw">END IF</span>;
+
+<span class="kw">EXCEPTION</span>
+  <span class="kw">WHEN NO_DATA_FOUND THEN</span>
+    DBMS_OUTPUT.PUT_LINE(<span class="str">'Employee not found'</span>);
+  <span class="kw">WHEN TOO_MANY_ROWS THEN</span>
+    DBMS_OUTPUT.PUT_LINE(<span class="str">'More than one row returned'</span>);
+  <span class="kw">WHEN</span> e_too_low <span class="kw">THEN</span>
+    DBMS_OUTPUT.PUT_LINE(<span class="str">'Salary below minimum'</span>);
+  <span class="kw">WHEN OTHERS THEN</span>
+    DBMS_OUTPUT.PUT_LINE(<span class="str">'Error: '</span> || SQLERRM);
+    <span class="kw">RAISE</span>;  <span class="cm">-- re-raise to caller</span>
+<span class="kw">END</span>;
+/</pre>
+        <div class="warn"><b>Caution:</b> WHEN OTHERS without RAISE silently swallows errors. Always log (SQLERRM / DBMS_UTILITY.FORMAT_ERROR_BACKTRACE) and re-raise in production code.</div>
+      </div>
+      <div class="divider"></div>
+      <div class="qa-block">
+        <div class="q-item">
+          <div class="q-label"><span class="q-badge">Q</span><span class="q-text">What is RAISE_APPLICATION_ERROR and when would you use it?</span></div>
+          <div class="a-label"><span class="a-badge">A</span><span class="a-text">RAISE_APPLICATION_ERROR lets you raise a custom error with a user-defined error number (between -20000 and -20999) and a descriptive message. It propagates back to the calling application just like a system error, making it ideal for enforcing business rules. Example: RAISE_APPLICATION_ERROR(-20001, 'Salary cannot exceed department budget'); The calling application receives an ORA-20001 error with your custom message.</span></div>
+        </div>
+        <div class="divider"></div>
+        <div class="q-item">
+          <div class="q-label"><span class="q-badge">Q</span><span class="q-text">What is PRAGMA EXCEPTION_INIT?</span></div>
+          <div class="a-label"><span class="a-badge">A</span><span class="a-text">PRAGMA EXCEPTION_INIT associates a user-defined exception name with a specific Oracle error number, letting you trap Oracle errors by a readable name. Example: PRAGMA EXCEPTION_INIT(e_fk_violation, -2292); Now you can WHEN e_fk_violation THEN instead of catching it in WHEN OTHERS and inspecting SQLCODE.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="procs" class="section">
+
+  <div class="topic" id="pr1">
+    <div class="topic-header" onclick="toggle('pr1')">
+      <div><div class="topic-title">Stored Procedures</div><div class="topic-sub">IN, OUT, IN OUT parameters</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="topic-body">
+      <div class="concept">
+<pre><span class="kw">CREATE OR REPLACE PROCEDURE</span> update_salary(
+  p_emp_id  <span class="kw">IN</span>     employees.employee_id%TYPE,
+  p_pct     <span class="kw">IN</span>     NUMBER,
+  p_new_sal    <span class="kw">OUT</span>  employees.salary%TYPE
+) <span class="kw">AS</span>
+<span class="kw">BEGIN</span>
+  <span class="kw">UPDATE</span> employees
+  <span class="kw">SET</span>    salary = salary * (<span class="num">1</span> + p_pct/<span class="num">100</span>)
+  <span class="kw">WHERE</span>  employee_id = p_emp_id
+  <span class="kw">RETURNING</span> salary <span class="kw">INTO</span> p_new_sal;
+
+  <span class="kw">IF</span> SQL%ROWCOUNT = <span class="num">0</span> <span class="kw">THEN</span>
+    RAISE_APPLICATION_ERROR(-<span class="num">20001</span>, <span class="str">'Employee not found'</span>);
+  <span class="kw">END IF</span>;
+<span class="kw">END</span> update_salary;
+/
+
+<span class="cm">-- Calling the procedure</span>
+<span class="kw">DECLARE</span>
+  v_new_sal NUMBER;
+<span class="kw">BEGIN</span>
+  update_salary(<span class="num">101</span>, <span class="num">10</span>, v_new_sal);
+  DBMS_OUTPUT.PUT_LINE(<span class="str">'New salary: '</span> || v_new_sal);
+<span class="kw">END</span>;
+/</pre>
+      </div>
+      <div class="divider"></div>
+      <div class="qa-block">
+        <div class="q-item">
+          <div class="q-label"><span class="q-badge">Q</span><span class="q-text">What is the difference between IN, OUT, and IN OUT parameters?</span></div>
+          <div class="a-label"><span class="a-badge">A</span><span class="a-text"><b>IN</b> — read-only input. The procedure cannot modify it. Default mode. <b>OUT</b> — write-only output. Any value passed in is not accessible inside; the procedure writes a result back to the caller. <b>IN OUT</b> — both: the procedure reads the incoming value and can also modify it to return a result. Use IN OUT when you need to transform a value in place.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic" id="pr2">
+    <div class="topic-header" onclick="toggle('pr2')">
+      <div><div class="topic-title">Functions vs Procedures</div><div class="topic-sub">RETURN, calling from SQL, deterministic</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="topic-body">
+      <div class="concept">
+<pre><span class="kw">CREATE OR REPLACE FUNCTION</span> get_annual_salary(
+  p_emp_id <span class="kw">IN</span> employees.employee_id%TYPE
+) <span class="kw">RETURN</span> NUMBER
+<span class="kw">DETERMINISTIC</span>  <span class="cm">-- same input always gives same output</span>
+<span class="kw">AS</span>
+  v_sal NUMBER;
+<span class="kw">BEGIN</span>
+  <span class="kw">SELECT</span> salary * <span class="num">12</span> <span class="kw">INTO</span> v_sal
+  <span class="kw">FROM</span>   employees
+  <span class="kw">WHERE</span>  employee_id = p_emp_id;
+  <span class="kw">RETURN</span> v_sal;
+<span class="kw">EXCEPTION</span>
+  <span class="kw">WHEN NO_DATA_FOUND THEN RETURN NULL</span>;
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Use directly in SQL</span>
+<span class="kw">SELECT</span> last_name, get_annual_salary(employee_id) <span class="kw">AS</span> annual
+<span class="kw">FROM</span>   employees;</pre>
+        <div class="tip"><b>DETERMINISTIC hint:</b> Tells the optimizer it can cache function results for repeated identical inputs — useful in queries scanning large tables.</div>
+      </div>
+      <div class="divider"></div>
+      <div class="qa-block">
+        <div class="q-item">
+          <div class="q-label"><span class="q-badge">Q</span><span class="q-text">What restrictions apply when calling a PL/SQL function from SQL?</span></div>
+          <div class="a-label"><span class="a-badge">A</span><span class="a-text">Functions called from SQL must: (1) not modify database tables (no INSERT/UPDATE/DELETE) unless called from a DML statement that already has that privilege, (2) not use COMMIT or ROLLBACK, (3) not reference package variables that change between calls in ways that affect purity, and (4) take only IN parameters (no OUT or IN OUT). The PRAGMA RESTRICT_REFERENCES directive (older) or DETERMINISTIC keyword helps declare these constraints to the optimizer.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="triggers" class="section">
+
+  <div class="topic" id="tr1">
+    <div class="topic-header" onclick="toggle('tr1')">
+      <div><div class="topic-title">DML Triggers</div><div class="topic-sub">BEFORE/AFTER, row-level, :NEW/:OLD</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="topic-body">
+      <div class="concept">
+<pre><span class="kw">CREATE OR REPLACE TRIGGER</span> trg_audit_salary
+<span class="kw">AFTER UPDATE OF</span> salary <span class="kw">ON</span> employees
+<span class="kw">FOR EACH ROW</span>
+<span class="kw">WHEN</span> (NEW.salary <> OLD.salary)
+<span class="kw">BEGIN</span>
+  <span class="kw">INSERT INTO</span> salary_audit(
+    emp_id, old_sal, new_sal, changed_by, changed_on
+  ) <span class="kw">VALUES</span> (
+    :NEW.employee_id,
+    :OLD.salary,
+    :NEW.salary,
+    USER,
+    SYSDATE
+  );
+<span class="kw">END</span>;
+/</pre>
+        <div class="tip"><b>:NEW</b> — the new value after DML. <b>:OLD</b> — the previous value. In a BEFORE trigger you can modify :NEW to change what gets written. :OLD is read-only always.</div>
+      </div>
+      <div class="divider"></div>
+      <div class="qa-block">
+        <div class="q-item">
+          <div class="q-label"><span class="q-badge">Q</span><span class="q-text">What is a mutating table error (ORA-04091) and how do you resolve it?</span></div>
+          <div class="a-label"><span class="a-badge">A</span><span class="a-text">ORA-04091 occurs when a row-level trigger tries to query or modify the same table that fired the trigger — the table is "mutating" (mid-DML) so Oracle prevents reading potentially inconsistent data. Solutions: (1) Use a statement-level trigger instead of row-level if you don't need :NEW/:OLD values. (2) Collect values in a package-level collection during row-level trigger execution, then process them in an AFTER STATEMENT trigger. (3) In Oracle 11g+, use compound triggers which bundle row and statement sections together cleanly.</span></div>
+        </div>
+        <div class="divider"></div>
+        <div class="q-item">
+          <div class="q-label"><span class="q-badge">Q</span><span class="q-text">What is the difference between a BEFORE and AFTER trigger?</span></div>
+          <div class="a-label"><span class="a-badge">A</span><span class="a-text">A BEFORE trigger fires before the DML operation completes — useful for validating or modifying :NEW values before they are written. An AFTER trigger fires after the operation — useful for audit logging or cascading actions where you need the confirmed final values. BEFORE triggers can cancel the operation by raising an exception; AFTER triggers cannot change what was written.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="packages" class="section">
+
+  <div class="topic" id="pkg1">
+    <div class="topic-header" onclick="toggle('pkg1')">
+      <div><div class="topic-title">Package Specification & Body</div><div class="topic-sub">Public/private, overloading, state</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="topic-body">
+      <div class="concept">
+        <p>A package groups related procedures, functions, variables, and types. The specification declares the public interface; the body contains the implementation.</p>
+<pre><span class="cm">-- Package Specification (public interface)</span>
+<span class="kw">CREATE OR REPLACE PACKAGE</span> emp_pkg <span class="kw">AS</span>
+  g_default_dept  NUMBER := <span class="num">10</span>;     <span class="cm">-- package variable</span>
+
+  <span class="kw">PROCEDURE</span> hire_employee(p_name VARCHAR2, p_sal NUMBER);
+  <span class="kw">FUNCTION</span>  get_headcount(p_dept NUMBER) <span class="kw">RETURN</span> NUMBER;
+  <span class="kw">FUNCTION</span>  get_headcount <span class="kw">RETURN</span> NUMBER; <span class="cm">-- overloaded</span>
+<span class="kw">END</span> emp_pkg;
+/
+
+<span class="cm">-- Package Body (private + implementation)</span>
+<span class="kw">CREATE OR REPLACE PACKAGE BODY</span> emp_pkg <span class="kw">AS</span>
+  <span class="cm">-- Private helper (not in spec)</span>
+  <span class="kw">FUNCTION</span> validate_sal(p_sal NUMBER) <span class="kw">RETURN BOOLEAN</span> <span class="kw">IS</span>
+  <span class="kw">BEGIN RETURN</span> p_sal > <span class="num">0</span>; <span class="kw">END</span>;
+
+  <span class="kw">PROCEDURE</span> hire_employee(p_name VARCHAR2, p_sal NUMBER) <span class="kw">IS</span>
+  <span class="kw">BEGIN</span>
+    <span class="kw">IF NOT</span> validate_sal(p_sal) <span class="kw">THEN</span>
+      RAISE_APPLICATION_ERROR(-<span class="num">20001</span>, <span class="str">'Invalid salary'</span>);
+    <span class="kw">END IF</span>;
+    <span class="cm">-- insert logic here</span>
+  <span class="kw">END</span>;
+
+  <span class="kw">FUNCTION</span> get_headcount(p_dept NUMBER) <span class="kw">RETURN</span> NUMBER <span class="kw">IS</span>
+    v_cnt NUMBER;
+  <span class="kw">BEGIN</span>
+    <span class="kw">SELECT COUNT</span>(*) <span class="kw">INTO</span> v_cnt
+    <span class="kw">FROM</span>   employees <span class="kw">WHERE</span> department_id = p_dept;
+    <span class="kw">RETURN</span> v_cnt;
+  <span class="kw">END</span>;
+
+  <span class="kw">FUNCTION</span> get_headcount <span class="kw">RETURN</span> NUMBER <span class="kw">IS</span>
+  <span class="kw">BEGIN RETURN</span> get_headcount(g_default_dept); <span class="kw">END</span>;
+<span class="kw">END</span> emp_pkg;
+/</pre>
+        <div class="tip"><b>Package state:</b> Package variables persist for the entire session (not transaction). They are initialized once when the package is first loaded in a session.</div>
+      </div>
+      <div class="divider"></div>
+      <div class="qa-block">
+        <div class="q-item">
+          <div class="q-label"><span class="q-badge">Q</span><span class="q-text">What are the advantages of packages over standalone procedures/functions?</span></div>
+          <div class="a-label"><span class="a-badge">A</span><span class="a-text">Packages provide: (1) <b>Encapsulation</b> — private elements hidden from callers. (2) <b>Performance</b> — the entire package is loaded into the shared pool on first call, making subsequent calls faster. (3) <b>Overloading</b> — multiple subprograms can share a name with different signatures. (4) <b>Session-level state</b> via package variables. (5) <b>Reduced dependency tracking</b> — changing the body without changing the spec does not invalidate dependent objects.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="advanced" class="section">
+
+  <div class="topic" id="adv1">
+    <div class="topic-header" onclick="toggle('adv1')">
+      <div><div class="topic-title">Bulk Collect & FORALL</div><div class="topic-sub">Reducing context switches, performance</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="topic-body">
+      <div class="concept">
+        <p>Every switch between the PL/SQL engine and SQL engine is a context switch — expensive at scale. BULK COLLECT fetches multiple rows at once; FORALL issues DML for an entire collection in one SQL engine call.</p>
+<pre><span class="kw">DECLARE</span>
+  <span class="kw">TYPE</span> t_ids   <span class="kw">IS TABLE OF</span> employees.employee_id%TYPE;
+  <span class="kw">TYPE</span> t_sals  <span class="kw">IS TABLE OF</span> employees.salary%TYPE;
+  v_ids   t_ids;
+  v_sals  t_sals;
+<span class="kw">BEGIN</span>
+  <span class="cm">-- Fetch 500 rows at a time (LIMIT avoids memory overload)</span>
+  <span class="kw">SELECT</span> employee_id, salary
+  <span class="kw">BULK COLLECT INTO</span> v_ids, v_sals
+  <span class="kw">FROM</span>   employees
+  <span class="kw">WHERE</span>  department_id = <span class="num">50</span>
+  <span class="kw">LIMIT</span>  <span class="num">500</span>;
+
+  <span class="cm">-- Update all in one SQL call</span>
+  <span class="kw">FORALL</span> i <span class="kw">IN</span> v_ids.FIRST..v_ids.LAST
+    <span class="kw">UPDATE</span> employees
+    <span class="kw">SET</span>    salary = v_sals(i) * <span class="num">1.05</span>
+    <span class="kw">WHERE</span>  employee_id = v_ids(i);
+
+  DBMS_OUTPUT.PUT_LINE(SQL%BULK_ROWCOUNT.COUNT || <span class="str">' updated'</span>);
+<span class="kw">END</span>;
+/</pre>
+        <div class="tip"><b>Rule of thumb:</b> If you're looping over 1000+ rows with row-by-row DML, FORALL can be 10–100x faster.</div>
+      </div>
+      <div class="divider"></div>
+      <div class="qa-block">
+        <div class="q-item">
+          <div class="q-label"><span class="q-badge">Q</span><span class="q-text">What is the SAVE EXCEPTIONS clause in FORALL and why is it important?</span></div>
+          <div class="a-label"><span class="a-badge">A</span><span class="a-text">By default, a FORALL statement stops at the first error and rolls back all changes in that batch. SAVE EXCEPTIONS continues processing all rows and collects errors in the SQL%BULK_EXCEPTIONS collection. You can then inspect each error (index, error code) and decide how to handle them. This is critical for bulk loads where you want to commit successful rows and report/reprocess failed ones without aborting the entire batch.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic" id="adv2">
+    <div class="topic-header" onclick="toggle('adv2')">
+      <div><div class="topic-title">Dynamic SQL — EXECUTE IMMEDIATE & DBMS_SQL</div><div class="topic-sub">NDS, bind variables, DDL in PL/SQL</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="topic-body">
+      <div class="concept">
+<pre><span class="cm">-- Execute DDL (cannot do this in static PL/SQL)</span>
+<span class="kw">BEGIN</span>
+  <span class="kw">EXECUTE IMMEDIATE</span> <span class="str">'CREATE TABLE temp_log(msg VARCHAR2(200))'</span>;
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Dynamic query with bind variable (safe — no SQL injection)</span>
+<span class="kw">DECLARE</span>
+  v_table VARCHAR2(30) := <span class="str">'EMPLOYEES'</span>;
+  v_dept  NUMBER       := <span class="num">10</span>;
+  v_cnt   NUMBER;
+<span class="kw">BEGIN</span>
+  <span class="kw">EXECUTE IMMEDIATE</span>
+    <span class="str">'SELECT COUNT(*) FROM '</span> || v_table ||
+    <span class="str">' WHERE department_id = :1'</span>
+  <span class="kw">INTO</span> v_cnt
+  <span class="kw">USING</span> v_dept;             <span class="cm">-- bind variable</span>
+  DBMS_OUTPUT.PUT_LINE(v_cnt);
+<span class="kw">END</span>;
+/</pre>
+        <div class="warn"><b>SQL Injection risk:</b> Never concatenate user-supplied values directly into dynamic SQL strings. Always use bind variables (USING clause) for data values. Table/column names cannot be bound — validate them against a whitelist.</div>
+      </div>
+      <div class="divider"></div>
+      <div class="qa-block">
+        <div class="q-item">
+          <div class="q-label"><span class="q-badge">Q</span><span class="q-text">When would you use DBMS_SQL instead of EXECUTE IMMEDIATE?</span></div>
+          <div class="a-label"><span class="a-badge">A</span><span class="a-text">EXECUTE IMMEDIATE (Native Dynamic SQL) handles most cases and is simpler. Use DBMS_SQL when: (1) the number of columns or bind variables is not known at compile time (fully dynamic structure), (2) you need to describe columns after parsing, (3) you need to reuse a parsed cursor for multiple executions with different binds, or (4) you're fetching into dynamically-sized collections. DBMS_SQL is more verbose but more flexible for truly unknown query shapes.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic" id="adv3">
+    <div class="topic-header" onclick="toggle('adv3')">
+      <div><div class="topic-title">Collections — Nested Tables, VARRAYs, Associative Arrays</div><div class="topic-sub">INDEX BY, EXTEND, DELETE</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="topic-body">
+      <div class="concept">
+<pre><span class="cm">-- Associative Array (INDEX BY) — best for in-memory lookups</span>
+<span class="kw">DECLARE</span>
+  <span class="kw">TYPE</span> t_lookup <span class="kw">IS TABLE OF</span> VARCHAR2(100) <span class="kw">INDEX BY</span> PLS_INTEGER;
+  v_map t_lookup;
+<span class="kw">BEGIN</span>
+  v_map(<span class="num">1</span>) := <span class="str">'Alice'</span>;
+  v_map(<span class="num">2</span>) := <span class="str">'Bob'</span>;
+  <span class="kw">IF</span> v_map.EXISTS(<span class="num">1</span>) <span class="kw">THEN</span>
+    DBMS_OUTPUT.PUT_LINE(v_map(<span class="num">1</span>));
+  <span class="kw">END IF</span>;
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Nested Table — can be stored in DB columns</span>
+<span class="kw">DECLARE</span>
+  <span class="kw">TYPE</span> t_names <span class="kw">IS TABLE OF</span> VARCHAR2(50);
+  v_names t_names := t_names(<span class="str">'Alice'</span>, <span class="str">'Bob'</span>);
+<span class="kw">BEGIN</span>
+  v_names.EXTEND;            <span class="cm">-- add one slot</span>
+  v_names(<span class="num">3</span>) := <span class="str">'Carol'</span>;
+  v_names.DELETE(<span class="num">2</span>);         <span class="cm">-- delete index 2</span>
+  DBMS_OUTPUT.PUT_LINE(v_names.COUNT);  <span class="cm">-- 2</span>
+<span class="kw">END</span>;
+/</pre>
+      </div>
+      <div class="divider"></div>
+      <div class="qa-block">
+        <div class="q-item">
+          <div class="q-label"><span class="q-badge">Q</span><span class="q-text">What is the difference between a nested table and a VARRAY?</span></div>
+          <div class="a-label"><span class="a-badge">A</span><span class="a-text">A <b>VARRAY</b> (variable-size array) has a fixed maximum size declared at definition time, elements are always dense (no gaps), and when stored in the database they are stored inline with the row. A <b>nested table</b> has no maximum size, can become sparse after deletions, and when stored in the database is stored in a separate storage table. Use VARRAYs for small, fixed-bound ordered collections; use nested tables for larger or unbounded collections that need set operations.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic" id="adv4">
+    <div class="topic-header" onclick="toggle('adv4')">
+      <div><div class="topic-title">Autonomous Transactions</div><div class="topic-sub">PRAGMA AUTONOMOUS_TRANSACTION, audit logging</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="topic-body">
+      <div class="concept">
+        <p>An autonomous transaction runs independently of its parent transaction. COMMITs and ROLLBACKs inside it do not affect the caller's transaction.</p>
+<pre><span class="kw">CREATE OR REPLACE PROCEDURE</span> log_error(
+  p_msg IN VARCHAR2
+) <span class="kw">AS</span>
+  <span class="kw">PRAGMA AUTONOMOUS_TRANSACTION</span>;
+<span class="kw">BEGIN</span>
+  <span class="kw">INSERT INTO</span> error_log(msg, logged_at)
+  <span class="kw">VALUES</span> (p_msg, SYSDATE);
+  <span class="kw">COMMIT</span>;  <span class="cm">-- commits only the log insert</span>
+<span class="kw">END</span>;
+/
+
+<span class="cm">-- Caller rolls back its own work but log is preserved</span>
+<span class="kw">BEGIN</span>
+  <span class="kw">INSERT INTO</span> orders ...; <span class="cm">-- business insert</span>
+  log_error(<span class="str">'Something went wrong'</span>);
+  <span class="kw">ROLLBACK</span>;   <span class="cm">-- order insert rolled back; log stays</span>
+<span class="kw">END</span>;</pre>
+        <div class="tip"><b>Classic use case:</b> Audit/error logging that must persist even when the main transaction rolls back.</div>
+      </div>
+      <div class="divider"></div>
+      <div class="qa-block">
+        <div class="q-item">
+          <div class="q-label"><span class="q-badge">Q</span><span class="q-text">What are the risks of overusing autonomous transactions?</span></div>
+          <div class="a-label"><span class="a-badge">A</span><span class="a-text">Autonomous transactions can cause data inconsistency — the autonomous transaction commits data that the parent later rolls back, leaving orphaned or inconsistent rows. They also consume an extra transaction slot and can cause deadlocks if the autonomous transaction tries to lock a row that the parent already holds. Use them only for logging, auditing, or other side-effects that should be independent of the parent's outcome — never as a shortcut to commit mid-procedure.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</div>
+
+<script>
+function switchTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+function toggle(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+</script>

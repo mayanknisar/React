@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>React Revision Guide</title>
+<link rel="stylesheet" href="react_guide.css">
+</head>
+<body>
+<header>
+  <div class="logo">⚛️</div>
+  <div><h1>React Revision Guide</h1><p>Beginner → Advanced · 2–3 Hours</p></div>
+  <div class="prog-wrap">
+    <div class="prog-bar"><div class="prog-fill" id="pfill"></div></div>
+    <div class="prog-text" id="ptxt">0 of 9 sections done</div>
+  </div>
+</header>
+<div class="layout">
+  <nav id="sidebar"></nav>
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="phase-name" id="pname"></div>
+        <h2 id="stitle"></h2>
+      </div>
+      <div class="topbar-btns">
+        <button type="button" class="btn" id="dbtn" onclick="toggleDone()">Mark done ✓</button>
+        <button type="button" class="btn btn-blue" onclick="prevNext(-1)" id="prevbtn">← Prev</button>
+        <button type="button" class="btn btn-blue" onclick="prevNext(1)"  id="nextbtn">Next →</button>
+      </div>
+    </div>
+    <div class="content" id="content"></div>
+    <div class="bottom-bar">
+      <span id="ctr"></span>
+      <span id="timeleft"></span>
+    </div>
+  </div>
+</div>
+
+<script src="react_guide.js"></script>
+</body>
+</html>

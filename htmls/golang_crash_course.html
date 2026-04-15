@@ -1,0 +1,1335 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@300;400;600;700;800&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --go-blue: #00ACD7;
+  --go-dark: #00758D;
+  --go-light: #E8F8FC;
+  --accent: #F4A623;
+  --accent2: #2ECC71;
+  --accent3: #E74C3C;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Sora', sans-serif;
+}
+
+body { font-family: var(--sans); background: transparent; color: var(--color-text-primary); }
+
+.course-header {
+  background: linear-gradient(135deg, #003C4D 0%, #005F7A 50%, #007A99 100%);
+  border-radius: 16px;
+  padding: 2rem 2.5rem;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.course-header::before {
+  content: 'Go';
+  position: absolute;
+  right: -20px;
+  top: -30px;
+  font-family: var(--sans);
+  font-size: 160px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.05);
+  pointer-events: none;
+}
+
+.course-header h1 {
+  font-size: 28px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+.course-header p {
+  font-size: 14px;
+  color: rgba(255,255,255,0.65);
+  margin-top: 6px;
+}
+
+.badges {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+.badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.badge-day1 { background: rgba(0,172,215,0.3); color: #7BE4F5; border: 1px solid rgba(0,172,215,0.4); }
+.badge-day2 { background: rgba(244,166,35,0.25); color: #FAC75A; border: 1px solid rgba(244,166,35,0.4); }
+.badge-day3 { background: rgba(46,204,113,0.2); color: #6EDFA4; border: 1px solid rgba(46,204,113,0.4); }
+
+.nav-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--color-border-tertiary);
+}
+.tab-btn {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--sans);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.tab-btn.active {
+  color: var(--go-blue);
+  border-bottom-color: var(--go-blue);
+}
+.tab-btn:hover:not(.active) { color: var(--color-text-primary); }
+
+.day-panel { display: none; }
+.day-panel.active { display: block; }
+
+.day-intro {
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid;
+}
+.day1-intro { background: rgba(0,172,215,0.08); border-color: var(--go-blue); }
+.day2-intro { background: rgba(244,166,35,0.08); border-color: var(--accent); }
+.day3-intro { background: rgba(46,204,113,0.08); border-color: var(--accent2); }
+.day-intro h2 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.day-intro p { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+
+.topic-card {
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.topic-card:hover { border-color: var(--color-border-secondary); }
+
+.topic-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  cursor: pointer;
+  user-select: none;
+}
+.topic-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  min-width: 36px;
+  text-align: center;
+}
+.d1 { background: rgba(0,172,215,0.12); color: #0098BE; }
+.d2 { background: rgba(244,166,35,0.15); color: #C07B00; }
+.d3 { background: rgba(46,204,113,0.12); color: #1A9E56; }
+
+.topic-title { font-size: 15px; font-weight: 600; flex: 1; }
+.topic-arrow {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  transition: transform 0.25s;
+}
+.topic-card.open .topic-arrow { transform: rotate(90deg); }
+
+.topic-body {
+  display: none;
+  padding: 0 18px 18px;
+  border-top: 0.5px solid var(--color-border-tertiary);
+}
+.topic-card.open .topic-body { display: block; }
+
+.topic-body h4 {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--color-text-secondary);
+  margin: 14px 0 8px;
+}
+
+.topic-body p, .topic-body li {
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--color-text-secondary);
+}
+
+.topic-body ul { padding-left: 16px; }
+.topic-body li { margin-bottom: 3px; }
+
+.code-block {
+  background: #0D1117;
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 10px 0;
+  overflow-x: auto;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.code-block pre {
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.65;
+  color: #E6EDF3;
+}
+
+.kw { color: #FF7B72; }
+.fn { color: #79C0FF; }
+.str { color: #A5D6FF; }
+.cmt { color: #6E7681; font-style: italic; }
+.typ { color: #FFA657; }
+.num { color: #79C0FF; }
+.pkg { color: #D2A8FF; }
+
+.tip-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(244,166,35,0.07);
+  border: 1px solid rgba(244,166,35,0.2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 10px 0;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+}
+.tip-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
+.key-concepts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 10px 0;
+}
+.concept-pill {
+  font-size: 12px;
+  font-family: var(--mono);
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: var(--color-background-secondary);
+  border: 0.5px solid var(--color-border-tertiary);
+  color: var(--color-text-primary);
+}
+
+.progress-bar {
+  height: 4px;
+  background: var(--color-background-secondary);
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 8px 0 14px;
+}
+.progress-fill { height: 100%; border-radius: 2px; transition: width 0.3s; }
+.d1-fill { background: var(--go-blue); }
+.d2-fill { background: var(--accent); }
+.d3-fill { background: var(--accent2); }
+</style>
+
+<div class="course-header">
+  <h1>Go (Golang) Crash Course</h1>
+  <p>Beginner → Advanced · 3 Days · Hands-on with real code examples</p>
+  <div class="badges">
+    <span class="badge badge-day1">Day 1 · Foundations</span>
+    <span class="badge badge-day2">Day 2 · Intermediate</span>
+    <span class="badge badge-day3">Day 3 · Advanced</span>
+  </div>
+</div>
+
+<div class="nav-tabs">
+  <button class="tab-btn active" onclick="switchDay(0)">Day 1 — Foundations</button>
+  <button class="tab-btn" onclick="switchDay(1)">Day 2 — Intermediate</button>
+  <button class="tab-btn" onclick="switchDay(2)">Day 3 — Advanced</button>
+</div>
+
+<!-- ===== DAY 1 ===== -->
+<div class="day-panel active" id="day-0">
+  <div class="day-intro day1-intro">
+    <h2>Day 1 · Foundations</h2>
+    <p>Get Go installed, understand the language philosophy, and master variables, types, control flow, functions, and arrays/slices/maps. By end of day you can write real command-line programs.</p>
+  </div>
+
+  <!-- Topic 1.1 -->
+  <div class="topic-card" >
+    <div class="topic-header" onclick="toggle(this)">
+      <span class="topic-num d1">1.1</span>
+      <span class="topic-title">Introduction & Setup</span>
+      <span class="topic-arrow">▶</span>
+    </div>
+    <div class="topic-body">
+      <h4>What is Go?</h4>
+      <p>Go (Golang) is a statically typed, compiled language designed at Google by Robert Griesemer, Rob Pike, and Ken Thompson. Released in 2009, it was built to address pain points in large-scale software systems: slow compile times, complex dependency management, and lack of built-in concurrency.</p>
+      <h4>Why Go?</h4>
+      <ul>
+        <li><strong>Fast compilation</strong> — large codebases compile in seconds</li>
+        <li><strong>Garbage collected</strong> — no manual memory management</li>
+        <li><strong>Concurrency built-in</strong> — goroutines &amp; channels as first-class citizens</li>
+        <li><strong>Single binary output</strong> — deploy anywhere, no runtime needed</li>
+        <li><strong>Strong standard library</strong> — HTTP servers, JSON, crypto, and more out of the box</li>
+        <li><strong>Enforced formatting</strong> — <code>gofmt</code> eliminates style debates</li>
+      </ul>
+      <h4>Installation</h4>
+      <div class="code-block"><pre><span class="cmt"># Download from https://go.dev/dl/
+# Verify installation:</span>
+$ go version
+go version go1.22.0 linux/amd64
+
+<span class="cmt"># Create your first module</span>
+$ mkdir hello && cd hello
+$ go mod init github.com/you/hello</pre></div>
+      <h4>Hello, World</h4>
+      <div class="code-block"><pre><span class="kw">package</span> main
+
+<span class="kw">import</span> <span class="str">"fmt"</span>
+
+<span class="kw">func</span> <span class="fn">main</span>() {
+    fmt.<span class="fn">Println</span>(<span class="str">"Hello, World!"</span>)
+}</pre></div>
+      <div class="tip-box"><span class="tip-icon">💡</span><span>Every Go program must have a <code>package main</code> and a <code>func main()</code>. Run it with <code>go run main.go</code> or build a binary with <code>go build</code>.</span></div>
+    </div>
+  </div>
+
+  <!-- Topic 1.2 -->
+  <div class="topic-card" >
+    <div class="topic-header" onclick="toggle(this)">
+      <span class="topic-num d1">1.2</span>
+      <span class="topic-title">Variables, Types & Constants</span>
+      <span class="topic-arrow">▶</span>
+    </div>
+    <div class="topic-body">
+      <h4>Declaration styles</h4>
+      <div class="code-block"><pre><span class="kw">var</span> name <span class="typ">string</span> = <span class="str">"Alice"</span>     <span class="cmt">// explicit type</span>
+<span class="kw">var</span> age = <span class="num">30</span>                  <span class="cmt">// inferred type</span>
+score := <span class="num">99.5</span>               <span class="cmt">// short declaration (inside func only)</span>
+<span class="kw">var</span> x, y <span class="typ">int</span> = <span class="num">10</span>, <span class="num">20</span>       <span class="cmt">// multiple in one line</span></pre></div>
+      <h4>Basic types</h4>
+      <div class="key-concepts">
+        <span class="concept-pill">bool</span>
+        <span class="concept-pill">string</span>
+        <span class="concept-pill">int / int8–64</span>
+        <span class="concept-pill">uint / uint8–64</span>
+        <span class="concept-pill">float32 / float64</span>
+        <span class="concept-pill">complex64/128</span>
+        <span class="concept-pill">byte (= uint8)</span>
+        <span class="concept-pill">rune (= int32)</span>
+      </div>
+      <h4>Zero values</h4>
+      <p>Every type has a zero value — <code>0</code> for numerics, <code>""</code> for strings, <code>false</code> for bools, <code>nil</code> for pointers/slices/maps.</p>
+      <h4>Constants</h4>
+      <div class="code-block"><pre><span class="kw">const</span> Pi = <span class="num">3.14159</span>
+
+<span class="cmt">// iota: auto-incrementing constant</span>
+<span class="kw">const</span> (
+    Sunday = <span class="kw">iota</span>  <span class="cmt">// 0</span>
+    Monday           <span class="cmt">// 1</span>
+    Tuesday          <span class="cmt">// 2</span>
+)
+
+<span class="cmt">// Bit flags with iota</span>
+<span class="kw">const</span> (
+    Read  = <span class="num">1</span> &lt;&lt; <span class="kw">iota</span>  <span class="cmt">// 1</span>
+    Write                 <span class="cmt">// 2</span>
+    Execute               <span class="cmt">// 4</span>
+)</pre></div>
+      <div class="tip-box"><span class="tip-icon">💡</span><span>Go is strongly typed — you cannot implicitly convert between numeric types. Use explicit conversions: <code>float64(myInt)</code>.</span></div>
+    </div>
+  </div>
+
+  <!-- Topic 1.3 -->
+  <div class="topic-card" >
+    <div class="topic-header" onclick="toggle(this)">
+      <span class="topic-num d1">1.3</span>
+      <span class="topic-title">Control Flow</span>
+      <span class="topic-arrow">▶</span>
+    </div>
+    <div class="topic-body">
+      <h4>if / else if / else</h4>
+      <div class="code-block"><pre><span class="cmt">// Go's if can include an initializer</span>
+<span class="kw">if</span> score := <span class="fn">getScore</span>(); score >= <span class="num">90</span> {
+    fmt.<span class="fn">Println</span>(<span class="str">"A grade"</span>)
+} <span class="kw">else if</span> score >= <span class="num">70</span> {
+    fmt.<span class="fn">Println</span>(<span class="str">"B grade"</span>)
+} <span class="kw">else</span> {
+    fmt.<span class="fn">Println</span>(<span class="str">"Below B"</span>)
+}</pre></div>
+      <h4>for loop (the only loop in Go)</h4>
+      <div class="code-block"><pre><span class="cmt">// Classic C-style</span>
+<span class="kw">for</span> i := <span class="num">0</span>; i &lt; <span class="num">5</span>; i++ {
+    fmt.<span class="fn">Println</span>(i)
+}
+
+<span class="cmt">// While-style</span>
+n := <span class="num">1</span>
+<span class="kw">for</span> n &lt; <span class="num">100</span> {
+    n *= <span class="num">2</span>
+}
+
+<span class="cmt">// Infinite loop</span>
+<span class="kw">for</span> {
+    <span class="cmt">// break to exit</span>
+}
+
+<span class="cmt">// Range over slice</span>
+fruits := []<span class="typ">string</span>{<span class="str">"apple"</span>, <span class="str">"banana"</span>, <span class="str">"cherry"</span>}
+<span class="kw">for</span> i, v := <span class="kw">range</span> fruits {
+    fmt.<span class="fn">Printf</span>(<span class="str">"%d: %s\n"</span>, i, v)
+}</pre></div>
+      <h4>switch</h4>
+      <div class="code-block"><pre><span class="kw">switch</span> day {
+<span class="kw">case</span> <span class="str">"Saturday"</span>, <span class="str">"Sunday"</span>:
+    fmt.<span class="fn">Println</span>(<span class="str">"Weekend!"</span>)
+<span class="kw">case</span> <span class="str">"Monday"</span>:
+    fmt.<span class="fn">Println</span>(<span class="str">"Start of week"</span>)
+<span class="kw">default</span>:
+    fmt.<span class="fn">Println</span>(<span class="str">"Weekday"</span>)
+}
+
+<span class="cmt">// Expressionless switch (like if-else chain)</span>
+<span class="kw">switch</span> {
+<span class="kw">case</span> temp &lt; <span class="num">0</span>:
+    fmt.<span class="fn">Println</span>(<span class="str">"Freezing"</span>)
+<span class="kw">case</span> temp &lt; <span class="num">20</span>:
+    fmt.<span class="fn">Println</span>(<span class="str">"Cold"</span>)
+}</pre></div>
+    </div>
+  </div>
+
+  <!-- Topic 1.4 -->
+  <div class="topic-card" >
+    <div class="topic-header" onclick="toggle(this)">
+      <span class="topic-num d1">1.4</span>
+      <span class="topic-title">Functions</span>
+      <span class="topic-arrow">▶</span>
+    </div>
+    <div class="topic-body">
+      <h4>Basic functions</h4>
+      <div class="code-block"><pre><span class="kw">func</span> <span class="fn">add</span>(a, b <span class="typ">int</span>) <span class="typ">int</span> {
+    <span class="kw">return</span> a + b
+}
+
+<span class="cmt">// Multiple return values (Go's killer feature)</span>
+<span class="kw">func</span> <span class="fn">divide</span>(a, b <span class="typ">float64</span>) (<span class="typ">float64</span>, <span class="typ">error</span>) {
+    <span class="kw">if</span> b == <span class="num">0</span> {
+        <span class="kw">return</span> <span class="num">0</span>, fmt.<span class="fn">Errorf</span>(<span class="str">"cannot divide by zero"</span>)
+    }
+    <span class="kw">return</span> a / b, <span class="kw">nil</span>
+}
+
+<span class="cmt">// Named return values</span>
+<span class="kw">func</span> <span class="fn">minMax</span>(nums []<span class="typ">int</span>) (min, max <span class="typ">int</span>) {
+    min, max = nums[<span class="num">0</span>], nums[<span class="num">0</span>]
+    <span class="kw">for</span> _, v := <span class="kw">range</span> nums {
+        <span class="kw">if</span> v &lt; min { min = v }
+        <span class="kw">if</span> v &gt; max { max = v }
+    }
+    <span class="kw">return</span> <span class="cmt">// naked return</span>
+}</pre></div>
+      <h4>Variadic functions</h4>
+      <div class="code-block"><pre><span class="kw">func</span> <span class="fn">sum</span>(nums ...<span class="typ">int</span>) <span class="typ">int</span> {
+    total := <span class="num">0</span>
+    <span class="kw">for</span> _, n := <span class="kw">range</span> nums {
+        total += n
+    }
+    <span class="kw">return</span> total
+}
+
+<span class="fn">sum</span>(<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>)           <span class="cmt">// 6</span>
+nums := []<span class="typ">int</span>{<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>}
+<span class="fn">sum</span>(nums...)           <span class="cmt">// spread slice</span></pre></div>
+      <h4>First-class functions & closures</h4>
+      <div class="code-block"><pre><span class="cmt">// Functions as values</span>
+<span class="fn">apply</span> := <span class="kw">func</span>(f <span class="kw">func</span>(<span class="typ">int</span>) <span class="typ">int</span>, x <span class="typ">int</span>) <span class="typ">int</span> {
+    <span class="kw">return</span> f(x)
+}
+
+<span class="cmt">// Closure — captures surrounding scope</span>
+<span class="kw">func</span> <span class="fn">counter</span>() <span class="kw">func</span>() <span class="typ">int</span> {
+    n := <span class="num">0</span>
+    <span class="kw">return func</span>() <span class="typ">int</span> {
+        n++
+        <span class="kw">return</span> n
+    }
+}
+c := <span class="fn">counter</span>()
+fmt.<span class="fn">Println</span>(<span class="fn">c</span>(), <span class="fn">c</span>(), <span class="fn">c</span>()) <span class="cmt">// 1 2 3</span></pre></div>
+      <h4>defer</h4>
+      <div class="code-block"><pre><span class="kw">func</span> <span class="fn">readFile</span>(path <span class="typ">string</span>) {
+    f, _ := os.<span class="fn">Open</span>(path)
+    <span class="kw">defer</span> f.<span class="fn">Close</span>()   <span class="cmt">// runs when readFile returns</span>
+    <span class="cmt">// ... work with f</span>
+}</pre></div>
+      <div class="tip-box"><span class="tip-icon">💡</span><span>Defers execute LIFO (last-in, first-out). Multiple defers stack — the last one registered runs first. Essential for resource cleanup (files, locks, connections).</span></div>
+    </div>
+  </div>
+
+  <!-- Topic 1.5 -->
+    <div class="topic-card" >
+    <div class="topic-header" onclick="toggle(this)">
+      <span class="topic-num d1">1.5</span>
+      <span class="topic-title">Arrays, Slices & Maps</span>
+      <span class="topic-arrow">▶</span>
+    </div>
+    <div class="topic-body">
+      <h4>Arrays (fixed size)</h4>
+      <div class="code-block"><pre><span class="kw">var</span> a [3]<span class="typ">int</span>             <span class="cmt">// [0 0 0]</span>
+b := [3]<span class="typ">int</span>{<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>}
+c := [...]<span class="typ">int</span>{<span class="num">4</span>, <span class="num">5</span>, <span class="num">6</span>} <span class="cmt">// compiler counts length</span>
+fmt.<span class="fn">Println</span>(len(b))     <span class="cmt">// 3</span></pre></div>
+      <h4>Slices (dynamic — use these always)</h4>
+      <div class="code-block"><pre>s := []<span class="typ">int</span>{<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>}
+
+<span class="cmt">// append — may allocate new backing array</span>
+s = <span class="fn">append</span>(s, <span class="num">4</span>, <span class="num">5</span>)
+
+<span class="cmt">// make — preallocate</span>
+s2 := <span class="fn">make</span>([]<span class="typ">int</span>, <span class="num">5</span>, <span class="num">10</span>) <span class="cmt">// len=5, cap=10</span>
+
+<span class="cmt">// Slicing</span>
+a := []<span class="typ">int</span>{<span class="num">0</span>,<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">4</span>}
+fmt.<span class="fn">Println</span>(a[<span class="num">1</span>:<span class="num">3</span>])  <span class="cmt">// [1 2]  (low:high, high excluded)</span>
+fmt.<span class="fn">Println</span>(a[:<span class="num">3</span>])   <span class="cmt">// [0 1 2]</span>
+fmt.<span class="fn">Println</span>(a[<span class="num">2</span>:])   <span class="cmt">// [2 3 4]</span>
+
+<span class="cmt">// copy</span>
+dst := <span class="fn">make</span>([]<span class="typ">int</span>, len(a))
+<span class="fn">copy</span>(dst, a)</pre></div>
+      <h4>Maps</h4>
+      <div class="code-block"><pre><span class="cmt">// Create</span>
+m := <span class="fn">map</span>[<span class="typ">string</span>]<span class="typ">int</span>{
+    <span class="str">"alice"</span>: <span class="num">92</span>,
+    <span class="str">"bob"</span>:   <span class="num">85</span>,
+}
+
+<span class="cmt">// Read, with ok-idiom</span>
+score, ok := m[<span class="str">"alice"</span>]
+<span class="kw">if</span> !ok {
+    fmt.<span class="fn">Println</span>(<span class="str">"not found"</span>)
+}
+
+<span class="cmt">// Mutate</span>
+m[<span class="str">"carol"</span>] = <span class="num">78</span>
+<span class="kw">delete</span>(m, <span class="str">"bob"</span>)
+
+<span class="cmt">// Iterate (order is random!)</span>
+<span class="kw">for</span> k, v := <span class="kw">range</span> m {
+    fmt.<span class="fn">Printf</span>(<span class="str">"%s → %d\n"</span>, k, v)
+}</pre></div>
+      <div class="tip-box"><span class="tip-icon">💡</span><span>Slices and maps are reference types — they point to an underlying data structure. Passing them to a function passes the reference, so the function can mutate the original.</span></div>
+    </div>
+  </div>
+
+  <!-- Topic 1.6 -->
+  <div class="topic-card" >
+    <div class="topic-header" onclick="toggle(this)">
+      <span class="topic-num d1">1.6</span>
+      <span class="topic-title">Pointers & Structs</span>
+      <span class="topic-arrow">▶</span>
+    </div>
+    <div class="topic-body">
+      <h4>Pointers</h4>
+      <div class="code-block"><pre>x := <span class="num">42</span>
+p := &x          <span class="cmt">// &x → pointer to x</span>
+fmt.<span class="fn">Println</span>(*p)  <span class="cmt">// 42  (* dereferences)</span>
+*p = <span class="num">100</span>
+fmt.<span class="fn">Println</span>(x)  <span class="cmt">// 100</span>
+
+<span class="cmt">// new() allocates, returns pointer</span>
+n := <span class="fn">new</span>(<span class="typ">int</span>)
+*n = <span class="num">7</span></pre></div>
+      <h4>Structs</h4>
+      <div class="code-block"><pre><span class="kw">type</span> <span class="typ">Person</span> <span class="kw">struct</span> {
+    Name string
+    Age  int
+    Email string
+}
+
+<span class="cmt">// Literal initialization</span>
+alice := <span class="typ">Person</span>{Name: <span class="str">"Alice"</span>, Age: <span class="num">30</span>}
+
+<span class="cmt">// Pointer to struct</span>
+bob := &<span class="typ">Person</span>{Name: <span class="str">"Bob"</span>, Age: <span class="num">25</span>}
+bob.Age = <span class="num">26</span>  <span class="cmt">// auto-dereferenced</span>
+
+<span class="cmt">// Anonymous struct (great for test data)</span>
+coord := <span class="kw">struct</span>{ X, Y <span class="typ">float64</span> }{<span class="num">1.5</span>, <span class="num">2.5</span>}
+
+<span class="cmt">// Struct embedding (composition, not inheritance)</span>
+<span class="kw">type</span> <span class="typ">Employee</span> <span class="kw">struct</span> {
+    <span class="typ">Person</span>     <span class="cmt">// embedded — Employee.Name works</span>
+    Department <span class="typ">string</span>
+    Salary     <span class="typ">float64</span>
+}</pre></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DAY 2 ===== -->
+<div class="day-panel" id="day-1">
+  <div class="day-intro day2-intro">
+    <h2>Day 2 · Intermediate</h2>
+    <p>Go deeper with interfaces, methods, error handling, packages, testing, and the standard library. You'll write production-quality, idiomatic Go code by end of day.</p>
+  </div>
+
+  <!-- Topic 2.1 -->
+  <div class="topic-card" >
+    <div class="topic-header" onclick="toggle(this)">
+      <span class="topic-num d2">2.1</span>
+      <span class="topic-title">Methods & Interfaces</span>
+      <span class="topic-arrow">▶</span>
+    </div>
+    <div class="topic-body">
+      <h4>Methods on types</h4>
+      <div class="code-block"><pre><span class="kw">type</span> <span class="typ">Rectangle</span> <span class="kw">struct</span> {
+    Width, Height <span class="typ">float64</span>
+}
+
+<span class="cmt">// Value receiver (read-only)</span>
+<span class="kw">func</span> (r <span class="typ">Rectangle</span>) <span class="fn">Area</span>() <span class="typ">float64</span> {
+    <span class="kw">return</span> r.Width * r.Height
+}
+
+<span class="cmt">// Pointer receiver (can mutate)</span>
+<span class="kw">func</span> (r *<span class="typ">Rectangle</span>) <span class="fn">Scale</span>(factor <span class="typ">float64</span>) {
+    r.Width *= factor
+    r.Height *= factor
+}</pre></div>
+      <h4>Interfaces — implicit satisfaction</h4>
+      <div class="code-block"><pre><span class="kw">type</span> <span class="typ">Shape</span> <span class="kw">interface</span> {
+    <span class="fn">Area</span>() <span class="typ">float64</span>
+    <span class="fn">Perimeter</span>() <span class="typ">float64</span>
+}
+
+<span class="cmt">// Rectangle satisfies Shape if it has both methods</span>
+<span class="kw">func</span> <span class="fn">printShape</span>(s <span class="typ">Shape</span>) {
+    fmt.<span class="fn">Printf</span>(<span class="str">"Area=%.2f Perimeter=%.2f\n"</span>,
+        s.<span class="fn">Area</span>(), s.<span class="fn">Perimeter</span>())
+}
+
+<span class="cmt">// Empty interface — accepts any value</span>
+<span class="kw">func</span> <span class="fn">describe</span>(i <span class="kw">interface</span>{}) {
+    fmt.<span class="fn">Printf</span>(<span class="str">"%T: %v\n"</span>, i, i)
+}
+<span class="cmt">// Modern style (Go 1.18+): any</span>
+<span class="kw">func</span> <span class="fn">describe</span>(i any) { ... }</pre></div>
+      <h4>Type assertions & type switches</h4>
+      <div class="code-block"><pre><span class="cmt">// Assertion with safety</span>
+<span class="kw">var</span> i <span class="kw">interface</span>{} = <span class="str">"hello"</span>
+s, ok := i.(<span class="typ">string</span>)
+
+<span class="cmt">// Type switch</span>
+<span class="kw">switch</span> v := i.(<span class="kw">type</span>) {
+<span class="kw">case</span> <span class="typ">int</span>:
+    fmt.<span class="fn">Println</span>(<span class="str">"int:"</span>, v)
+<span class="kw">case</span> <span class="typ">string</span>:
+    fmt.<span class="fn">Println</span>(<span class="str">"string:"</span>, v)
+<span class="kw">default</span>:
+    fmt.<span class="fn">Println</span>(<span class="str">"unknown type"</span>)
+}</pre></div>
+      <div class="tip-box"><span class="tip-icon">💡</span><span>The Stringer interface (<code>String() string</code>) from <code>fmt</code> lets your types print nicely in fmt calls. The io.Reader/Writer interfaces power the entire I/O ecosystem.</span></div>
+    </div>
+  </div>
+
+  <!-- Topic 2.2 -->
+  <div class="topic-card" >
+    <div class="topic-header" onclick="toggle(this)">
+      <span class="topic-num d2">2.2</span>
+      <span class="topic-title">Error Handling</span>
+      <span class="topic-arrow">▶</span>
+    </div>
+    <div class="topic-body">
+      <h4>The error interface</h4>
+      <div class="code-block"><pre><span class="cmt">// error is just an interface:</span>
+<span class="cmt">// type error interface { Error() string }</span>
+
+<span class="kw">func</span> <span class="fn">openFile</span>(path <span class="typ">string</span>) ([]<span class="typ">byte</span>, <span class="typ">error</span>) {
+    data, err := os.<span class="fn">ReadFile</span>(path)
+    <span class="kw">if</span> err != <span class="kw">nil</span> {
+        <span class="kw">return</span> <span class="kw">nil</span>, fmt.<span class="fn">Errorf</span>(<span class="str">"openFile: %w"</span>, err)
+    }
+    <span class="kw">return</span> data, <span class="kw">nil</span>
+}</pre></div>
+      <h4>Custom error types</h4>
+      <div class="code-block"><pre><span class="kw">type</span> <span class="typ">ValidationError</span> <span class="kw">struct</span> {
+    Field   <span class="typ">string</span>
+    Message <span class="typ">string</span>
+}
+
+<span class="kw">func</span> (e *<span class="typ">ValidationError</span>) <span class="fn">Error</span>() <span class="typ">string</span> {
+    <span class="kw">return</span> fmt.<span class="fn">Sprintf</span>(<span class="str">"validation: %s — %s"</span>,
+        e.Field, e.Message)
+}</pre></div>
+      <h4>errors.Is / errors.As / wrapping</h4>
+      <div class="code-block"><pre><span class="kw">import</span> <span class="str">"errors"</span>
+
+<span class="kw">var</span> ErrNotFound = errors.<span class="fn">New</span>(<span class="str">"not found"</span>)
+
+err := fmt.<span class="fn">Errorf</span>(<span class="str">"db query: %w"</span>, ErrNotFound)
+
+<span class="cmt">// Check error chain</span>
+<span class="kw">if</span> errors.<span class="fn">Is</span>(err, ErrNotFound) {
+    fmt.<span class="fn">Println</span>(<span class="str">"handle not-found case"</span>)
+}
+
+<span class="cmt">// Extract a specific error type</span>
+<span class="kw">var</span> ve *<span class="typ">ValidationError</span>
+<span class="kw">if</span> errors.<span class="fn">As</span>(err, &ve) {
+    fmt.<span class="fn">Println</span>(<span class="str">"field:"</span>, ve.Field)
+}</pre></div>
+      <h4>panic & recover</h4>
+      <div class="code-block"><pre><span class="kw">func</span> <span class="fn">safeDivide</span>(a, b <span class="typ">int</span>) (result <span class="typ">int</span>, err <span class="typ">error</span>) {
+    <span class="kw">defer func</span>() {
+        <span class="kw">if</span> r := <span class="fn">recover</span>(); r != <span class="kw">nil</span> {
+            err = fmt.<span class="fn">Errorf</span>(<span class="str">"recovered: %v"</span>, r)
+        }
+    }()
+    <span class="kw">return</span> a / b, <span class="kw">nil</span> <span class="cmt">// panics if b==0</span>
+}</pre></div>
+    </div>
+  </div>
+
+  <!-- Topic 2.3 -->
+  <div class="topic-card" >
+    <div class="topic-header" onclick="toggle(this)">
+      <span class="topic-num d2">2.3</span>
+      <span class="topic-title">Packages, Modules & Imports</span>
+      <span class="topic-arrow">▶</span>
+    </div>
+    <div class="topic-body">
+      <h4>Module system</h4>
+      <div class="code-block"><pre><span class="cmt"># go.mod — your module definition</span>
+module github.com/you/myapp
+
+go 1.22
+
+require (
+    github.com/gin-gonic/gin v1.9.1
+)
+
+<span class="cmt"># Manage dependencies</span>
+$ go get github.com/gin-gonic/gin
+$ go mod tidy   <span class="cmt"># remove unused, add missing</span>
+$ go mod download</pre></div>
+      <h4>Packages & visibility</h4>
+      <div class="code-block"><pre><span class="cmt">// Exported: capitalized identifier</span>
+<span class="kw">func</span> <span class="fn">PublicFunc</span>() {}
+<span class="kw">type</span> <span class="typ">PublicType</span> <span class="kw">struct</span>{}
+
+<span class="cmt">// Unexported: lowercase</span>
+<span class="kw">func</span> <span class="fn">internalHelper</span>() {}
+<span class="kw">var</span> privateState = <span class="num">0</span>
+
+<span class="cmt">// Import aliases</span>
+<span class="kw">import</span> (
+    <span class="str">"fmt"</span>
+    mrand <span class="str">"math/rand"</span>
+    _ <span class="str">"image/png"</span>    <span class="cmt">// blank import (side effects only)</span>
+)</pre></div>
+      <h4>init() function</h4>
+      <div class="code-block"><pre><span class="kw">func</span> <span class="fn">init</span>() {
+    <span class="cmt">// Runs automatically before main().</span>
+    <span class="cmt">// Each file/package can have multiple init().</span>
+    <span class="cmt">// Used for config, DB connections, registrations.</span>
+    log.<span class="fn">Println</span>(<span class="str">"package initialized"</span>)
+}</pre></div>
+    </div>
+  </div>
+
+  <!-- Topic 2.4 -->
+  <div class="topic-card" >
+    <div class="topic-header" onclick="toggle(this)">
+      <span class="topic-num d2">2.4</span>
+      <span class="topic-title">Standard Library Deep Dive</span>
+      <span class="topic-arrow">▶</span>
+    </div>
+    <div class="topic-body">
+      <h4>fmt</h4>
+      <div class="code-block"><pre>fmt.<span class="fn">Printf</span>(<span class="str">"%s is %d years old\n"</span>, name, age)
+fmt.<span class="fn">Sprintf</span>(<span class="str">"formatted: %v"</span>, value)  <span class="cmt">// returns string</span>
+fmt.<span class="fn">Fprintf</span>(os.Stderr, <span class="str">"error: %v\n"</span>, err)
+fmt.<span class="fn">Errorf</span>(<span class="str">"wrapped: %w"</span>, err)</pre></div>
+      <h4>strings & strconv</h4>
+      <div class="code-block"><pre>strings.<span class="fn">Contains</span>(<span class="str">"hello"</span>, <span class="str">"ell"</span>)     <span class="cmt">// true</span>
+strings.<span class="fn">Split</span>(<span class="str">"a,b,c"</span>, <span class="str">","</span>)         <span class="cmt">// [a b c]</span>
+strings.<span class="fn">Join</span>([]<span class="typ">string</span>{<span class="str">"a"</span>,<span class="str">"b"</span>}, <span class="str">"-"</span>)  <span class="cmt">// "a-b"</span>
+strings.<span class="fn">ToUpper</span>(<span class="str">"hello"</span>)             <span class="cmt">// "HELLO"</span>
+strings.<span class="fn">TrimSpace</span>(<span class="str">"  hi  "</span>)         <span class="cmt">// "hi"</span>
+
+n, err := strconv.<span class="fn">Atoi</span>(<span class="str">"42"</span>)       <span class="cmt">// string → int</span>
+s := strconv.<span class="fn">Itoa</span>(<span class="num">42</span>)             <span class="cmt">// int → string</span></pre></div>
+      <h4>encoding/json</h4>
+      <div class="code-block"><pre><span class="kw">type</span> <span class="typ">User</span> <span class="kw">struct</span> {
+    ID    <span class="typ">int</span>    <span class="str">`json:"id"`</span>
+    Name  <span class="typ">string</span> <span class="str">`json:"name"`</span>
+    Email <span class="typ">string</span> <span class="str">`json:"email,omitempty"`</span>
+}
+
+<span class="cmt">// Marshal: Go → JSON</span>
+b, err := json.<span class="fn">Marshal</span>(user)
+fmt.<span class="fn">Println</span>(<span class="typ">string</span>(b))
+
+<span class="cmt">// Unmarshal: JSON → Go</span>
+<span class="kw">var</span> u <span class="typ">User</span>
+err = json.<span class="fn">Unmarshal</span>([]<span class="typ">byte</span>(data), &u)</pre></div>
+      <h4>net/http</h4>
+      <div class="code-block"><pre><span class="cmt">// Minimal HTTP server</span>
+http.<span class="fn">HandleFunc</span>(<span class="str">"/hello"</span>, <span class="kw">func</span>(w http.ResponseWriter, r *http.Request) {
+    fmt.<span class="fn">Fprintf</span>(w, <span class="str">"Hello, %s!"</span>, r.URL.Query().<span class="fn">Get</span>(<span class="str">"name"</span>))
+})
+http.<span class="fn">ListenAndServe</span>(<span class="str">":8080"</span>, <span class="kw">nil</span>)
+
+<span class="cmt">// HTTP client</span>
+resp, err := http.<span class="fn">Get</span>(<span class="str">"https://api.example.com/data"</span>)
+<span class="kw">defer</span> resp.Body.<span class="fn">Close</span>()
+body, _ := io.<span class="fn">ReadAll</span>(resp.Body)</pre></div>
+    </div>
+  </div>
+
+  <!-- Topic 2.5 -->
+  <div class="topic-card" >
+    <div class="topic-header" onclick="toggle(this)">
+      <span class="topic-num d2">2.5</span>
+      <span class="topic-title">Testing in Go</span>
+      <span class="topic-arrow">▶</span>
+    </div>
+    <div class="topic-body">
+      <h4>Writing tests</h4>
+      <div class="code-block"><pre><span class="cmt">// math_test.go</span>
+<span class="kw">package</span> math
+
+<span class="kw">import</span> <span class="str">"testing"</span>
+
+<span class="kw">func</span> <span class="fn">TestAdd</span>(t *testing.T) {
+    got := <span class="fn">Add</span>(<span class="num">2</span>, <span class="num">3</span>)
+    want := <span class="num">5</span>
+    <span class="kw">if</span> got != want {
+        t.<span class="fn">Errorf</span>(<span class="str">"Add(2,3) = %d; want %d"</span>, got, want)
+    }
+}
+
+<span class="cmt">// Table-driven tests (idiomatic Go)</span>
+<span class="kw">func</span> <span class="fn">TestDivide</span>(t *testing.T) {
+    cases := []<span class="kw">struct</span>{
+        a, b  <span class="typ">float64</span>
+        want  <span class="typ">float64</span>
+        wantErr <span class="typ">bool</span>
+    }{
+        {<span class="num">10</span>, <span class="num">2</span>, <span class="num">5</span>, <span class="kw">false</span>},
+        {<span class="num">10</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="kw">true</span>},
+    }
+    <span class="kw">for</span> _, tc := <span class="kw">range</span> cases {
+        got, err := <span class="fn">Divide</span>(tc.a, tc.b)
+        <span class="kw">if</span> (err != <span class="kw">nil</span>) != tc.wantErr {
+            t.<span class="fn">Errorf</span>(<span class="str">"unexpected error: %v"</span>, err)
+        }
+        <span class="kw">if</span> got != tc.want { t.<span class="fn">Errorf</span>(...) }
+    }
+}</pre></div>
+      <div class="code-block"><pre><span class="cmt"># Run tests</span>
+$ go test ./...
+$ go test -v -run TestAdd
+$ go test -cover          <span class="cmt"># coverage report</span>
+$ go test -bench=.        <span class="cmt"># benchmarks</span></pre></div>
+      <h4>Benchmarks</h4>
+      <div class="code-block"><pre><span class="kw">func</span> <span class="fn">BenchmarkAdd</span>(b *testing.B) {
+    <span class="kw">for</span> i := <span class="num">0</span>; i &lt; b.N; i++ {
+        <span class="fn">Add</span>(<span class="num">2</span>, <span class="num">3</span>)
+    }
+}</pre></div>
+    </div>
+  </div>
+
+  <!-- Topic 2.6 -->
+    <div class="topic-card" >
+    <div class="topic-header" onclick="toggle(this)">
+      <span class="topic-num d2">2.6</span>
+      <span class="topic-title">Generics (Go 1.18+)</span>
+      <span class="topic-arrow">▶</span>
+    </div>
+    <div class="topic-body">
+      <h4>Type parameters</h4>
+      <div class="code-block"><pre><span class="cmt">// Generic function</span>
+<span class="kw">func</span> <span class="fn">Map</span>[T, U any](s []T, f <span class="kw">func</span>(T) U) []U {
+    result := <span class="fn">make</span>([]U, len(s))
+    <span class="kw">for</span> i, v := <span class="kw">range</span> s {
+        result[i] = f(v)
+    }
+    <span class="kw">return</span> result
+}
+
+doubled := <span class="fn">Map</span>([]<span class="typ">int</span>{<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>}, <span class="kw">func</span>(x <span class="typ">int</span>) <span class="typ">int</span> { <span class="kw">return</span> x * <span class="num">2</span> })</pre></div>
+      <h4>Constraints</h4>
+      <div class="code-block"><pre><span class="kw">import</span> <span class="str">"golang.org/x/exp/constraints"</span>
+
+<span class="kw">func</span> <span class="fn">Min</span>[T constraints.Ordered](a, b T) T {
+    <span class="kw">if</span> a &lt; b { <span class="kw">return</span> a }
+    <span class="kw">return</span> b
+}
+
+<span class="fn">Min</span>(<span class="num">3</span>, <span class="num">5</span>)           <span class="cmt">// 3 (int)</span>
+<span class="fn">Min</span>(<span class="str">"apple"</span>, <span class="str">"banana"</span>) <span class="cmt">// "apple" (string)</span>
+
+<span class="cmt">// Custom constraint</span>
+<span class="kw">type</span> <span class="typ">Number</span> <span class="kw">interface</span> {
+    ~<span class="typ">int</span> | ~<span class="typ">float64</span>
+}
+<span class="kw">func</span> <span class="fn">Sum</span>[T <span class="typ">Number</span>](nums []T) T { ... }</pre></div>
+      <h4>Generic data structures</h4>
+      <div class="code-block"><pre><span class="kw">type</span> <span class="typ">Stack</span>[T any] <span class="kw">struct</span> {
+    items []T
+}
+
+<span class="kw">func</span> (s *<span class="typ">Stack</span>[T]) <span class="fn">Push</span>(item T) {
+    s.items = <span class="fn">append</span>(s.items, item)
+}
+
+<span class="kw">func</span> (s *<span class="typ">Stack</span>[T]) <span class="fn">Pop</span>() (T, <span class="typ">bool</span>) {
+    <span class="kw">var</span> zero T
+    <span class="kw">if</span> len(s.items) == <span class="num">0</span> { <span class="kw">return</span> zero, <span class="kw">false</span> }
+    n := len(s.items) - <span class="num">1</span>
+    item := s.items[n]
+    s.items = s.items[:n]
+    <span class="kw">return</span> item, <span class="kw">true</span>
+}</pre></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DAY 3 ===== -->
+<div class="day-panel" id="day-2">
+  <div class="day-intro day3-intro">
+    <h2>Day 3 · Advanced</h2>
+    <p>Master Go's unique concurrency model, build real HTTP APIs, use the database/sql package, profile your programs, and understand Go internals. By end of day you can build production services.</p>
+  </div>
+
+  <!-- Topic 3.1 -->
+  <div class="topic-card" >
+    <div class="topic-header" onclick="toggle(this)">
+      <span class="topic-num d3">3.1</span>
+      <span class="topic-title">Goroutines & Channels</span>
+      <span class="topic-arrow">▶</span>
+    </div>
+    <div class="topic-body">
+      <h4>Goroutines — lightweight threads</h4>
+      <div class="code-block"><pre><span class="kw">func</span> <span class="fn">worker</span>(id <span class="typ">int</span>) {
+    fmt.<span class="fn">Printf</span>(<span class="str">"worker %d starting\n"</span>, id)
+    time.<span class="fn">Sleep</span>(time.Second)
+    fmt.<span class="fn">Printf</span>(<span class="str">"worker %d done\n"</span>, id)
+}
+
+<span class="kw">func</span> <span class="fn">main</span>() {
+    <span class="kw">for</span> i := <span class="num">1</span>; i &lt;= <span class="num">5</span>; i++ {
+        <span class="kw">go</span> <span class="fn">worker</span>(i)    <span class="cmt">// starts goroutine</span>
+    }
+    time.<span class="fn">Sleep</span>(<span class="num">2</span> * time.Second) <span class="cmt">// wait (use sync in practice)</span>
+}</pre></div>
+      <h4>Channels — goroutine communication</h4>
+      <div class="code-block"><pre><span class="cmt">// Unbuffered (synchronous)</span>
+ch := <span class="fn">make</span>(<span class="kw">chan</span> <span class="typ">int</span>)
+<span class="kw">go func</span>() { ch &lt;- <span class="num">42</span> }()
+val := &lt;-ch
+
+<span class="cmt">// Buffered (async up to capacity)</span>
+bch := <span class="fn">make</span>(<span class="kw">chan</span> <span class="typ">string</span>, <span class="num">3</span>)
+bch &lt;- <span class="str">"first"</span>
+bch &lt;- <span class="str">"second"</span>
+
+<span class="cmt">// Range over channel</span>
+<span class="kw">go func</span>() {
+    <span class="kw">for</span> i := <span class="num">0</span>; i &lt; <span class="num">5</span>; i++ { ch &lt;- i }
+    <span class="fn">close</span>(ch)     <span class="cmt">// signals end</span>
+}()
+<span class="kw">for</span> v := <span class="kw">range</span> ch { fmt.<span class="fn">Println</span>(v) }
+
+<span class="cmt">// Directional channels</span>
+<span class="kw">func</span> <span class="fn">producer</span>(ch <span class="kw">chan</span>&lt;- <span class="typ">int</span>) { ch &lt;- <span class="num">1</span> }
+<span class="kw">func</span> <span class="fn">consumer</span>(ch &lt;-<span class="kw">chan</span> <span class="typ">int</span>) { v := &lt;-ch; _ = v }</pre></div>
+      <h4>select statement</h4>
+      <div class="code-block"><pre><span class="kw">select</span> {
+<span class="kw">case</span> msg := &lt;-ch1:
+    fmt.<span class="fn">Println</span>(<span class="str">"from ch1:"</span>, msg)
+<span class="kw">case</span> msg := &lt;-ch2:
+    fmt.<span class="fn">Println</span>(<span class="str">"from ch2:"</span>, msg)
+<span class="kw">case</span> ch3 &lt;- result:
+    fmt.<span class="fn">Println</span>(<span class="str">"sent to ch3"</span>)
+<span class="kw">case</span> &lt;-time.<span class="fn">After</span>(<span class="num">1</span> * time.Second):
+    fmt.<span class="fn">Println</span>(<span class="str">"timeout!"</span>)
+<span class="kw">default</span>:
+    fmt.<span class="fn">Println</span>(<span class="str">"non-blocking fallthrough"</span>)
+}</pre></div>
+      <div class="tip-box"><span class="tip-icon">💡</span><span>Go can run millions of goroutines concurrently — each starts at ~2KB of stack. The Go scheduler multiplexes them onto OS threads (GOMAXPROCS controls parallelism, defaults to CPU count).</span></div>
+    </div>
+  </div>
+
+  <!-- Topic 3.2 -->
+  <div class="topic-card" >
+    <div class="topic-header" onclick="toggle(this)">
+      <span class="topic-num d3">3.2</span>
+      <span class="topic-title">Sync Package & Concurrency Patterns</span>
+      <span class="topic-arrow">▶</span>
+    </div>
+    <div class="topic-body">
+      <h4>WaitGroup</h4>
+      <div class="code-block"><pre><span class="kw">var</span> wg sync.<span class="typ">WaitGroup</span>
+
+<span class="kw">for</span> i := <span class="num">0</span>; i &lt; <span class="num">5</span>; i++ {
+    wg.<span class="fn">Add</span>(<span class="num">1</span>)
+    <span class="kw">go func</span>(id <span class="typ">int</span>) {
+        <span class="kw">defer</span> wg.<span class="fn">Done</span>()
+        <span class="fn">doWork</span>(id)
+    }(i)
+}
+wg.<span class="fn">Wait</span>()  <span class="cmt">// blocks until all Done()</span></pre></div>
+      <h4>Mutex</h4>
+      <div class="code-block"><pre><span class="kw">type</span> <span class="typ">SafeCounter</span> <span class="kw">struct</span> {
+    mu sync.<span class="typ">Mutex</span>
+    v  <span class="typ">map</span>[<span class="typ">string</span>]<span class="typ">int</span>
+}
+
+<span class="kw">func</span> (c *<span class="typ">SafeCounter</span>) <span class="fn">Inc</span>(key <span class="typ">string</span>) {
+    c.mu.<span class="fn">Lock</span>()
+    <span class="kw">defer</span> c.mu.<span class="fn">Unlock</span>()
+    c.v[key]++
+}
+
+<span class="cmt">// RWMutex for read-heavy workloads</span>
+<span class="kw">var</span> rw sync.<span class="typ">RWMutex</span>
+rw.<span class="fn">RLock</span>()   <span class="cmt">// multiple readers OK</span>
+rw.<span class="fn">RUnlock</span>()
+rw.<span class="fn">Lock</span>()    <span class="cmt">// exclusive write</span>
+rw.<span class="fn">Unlock</span>()</pre></div>
+      <h4>Worker pool pattern</h4>
+      <div class="code-block"><pre><span class="kw">func</span> <span class="fn">workerPool</span>(jobs &lt;-<span class="kw">chan</span> <span class="typ">int</span>, results <span class="kw">chan</span>&lt;- <span class="typ">int</span>, wg *sync.<span class="typ">WaitGroup</span>) {
+    <span class="kw">defer</span> wg.<span class="fn">Done</span>()
+    <span class="kw">for</span> j := <span class="kw">range</span> jobs {
+        results &lt;- j * j  <span class="cmt">// process job</span>
+    }
+}
+
+jobs    := <span class="fn">make</span>(<span class="kw">chan</span> <span class="typ">int</span>, <span class="num">100</span>)
+results := <span class="fn">make</span>(<span class="kw">chan</span> <span class="typ">int</span>, <span class="num">100</span>)
+
+<span class="kw">var</span> wg sync.<span class="typ">WaitGroup</span>
+<span class="kw">for</span> w := <span class="num">0</span>; w &lt; <span class="num">5</span>; w++ {  <span class="cmt">// 5 workers</span>
+    wg.<span class="fn">Add</span>(<span class="num">1</span>)
+    <span class="kw">go</span> <span class="fn">workerPool</span>(jobs, results, &wg)
+}
+<span class="kw">for</span> j := <span class="num">1</span>; j &lt;= <span class="num">50</span>; j++ { jobs &lt;- j }
+<span class="fn">close</span>(jobs)
+wg.<span class="fn">Wait</span>()
+<span class="fn">close</span>(results)</pre></div>
+      <h4>sync.Once & sync.Map</h4>
+      <div class="code-block"><pre><span class="kw">var</span> once sync.<span class="typ">Once</span>
+<span class="kw">var</span> instance *<span class="typ">DB</span>
+
+<span class="kw">func</span> <span class="fn">GetDB</span>() *<span class="typ">DB</span> {
+    once.<span class="fn">Do</span>(<span class="kw">func</span>() { instance = <span class="fn">connectDB</span>() })
+    <span class="kw">return</span> instance
+}
+
+<span class="cmt">// sync.Map: concurrent-safe map</span>
+<span class="kw">var</span> cache sync.<span class="typ">Map</span>
+cache.<span class="fn">Store</span>(<span class="str">"key"</span>, <span class="str">"value"</span>)
+val, ok := cache.<span class="fn">Load</span>(<span class="str">"key"</span>)</pre></div>
+    </div>
+  </div>
+
+  <!-- Topic 3.3 -->
+  <div class="topic-card" >
+    <div class="topic-header" onclick="toggle(this)">
+      <span class="topic-num d3">3.3</span>
+      <span class="topic-title">Context Package</span>
+      <span class="topic-arrow">▶</span>
+    </div>
+    <div class="topic-body">
+      <h4>Why context?</h4>
+      <p>The <code>context</code> package carries cancellation signals, deadlines, and request-scoped values across API boundaries and goroutines. It's the standard way to propagate cancellation in Go.</p>
+      <h4>Creating contexts</h4>
+      <div class="code-block"><pre>ctx := context.<span class="fn">Background</span>()   <span class="cmt">// root, never cancelled</span>
+ctx := context.<span class="fn">TODO</span>()          <span class="cmt">// placeholder during refactor</span>
+
+<span class="cmt">// With cancellation</span>
+ctx, cancel := context.<span class="fn">WithCancel</span>(context.<span class="fn">Background</span>())
+<span class="kw">defer</span> <span class="fn">cancel</span>()
+
+<span class="cmt">// With timeout</span>
+ctx, cancel := context.<span class="fn">WithTimeout</span>(ctx, <span class="num">5</span>*time.Second)
+<span class="kw">defer</span> <span class="fn">cancel</span>()
+
+<span class="cmt">// With deadline</span>
+deadline := time.<span class="fn">Now</span>().<span class="fn">Add</span>(<span class="num">30</span> * time.Minute)
+ctx, cancel := context.<span class="fn">WithDeadline</span>(ctx, deadline)</pre></div>
+      <h4>Using context in goroutines</h4>
+      <div class="code-block"><pre><span class="kw">func</span> <span class="fn">fetchData</span>(ctx context.<span class="typ">Context</span>, url <span class="typ">string</span>) ([]<span class="typ">byte</span>, <span class="typ">error</span>) {
+    req, _ := http.<span class="fn">NewRequestWithContext</span>(ctx, <span class="str">"GET"</span>, url, <span class="kw">nil</span>)
+    resp, err := http.DefaultClient.<span class="fn">Do</span>(req)
+    <span class="kw">if</span> err != <span class="kw">nil</span> { <span class="kw">return</span> <span class="kw">nil</span>, err }
+    <span class="kw">defer</span> resp.Body.<span class="fn">Close</span>()
+    <span class="kw">return</span> io.<span class="fn">ReadAll</span>(resp.Body)
+}
+
+<span class="cmt">// Goroutine that respects cancellation</span>
+<span class="kw">func</span> <span class="fn">doWork</span>(ctx context.<span class="typ">Context</span>) {
+    <span class="kw">for</span> {
+        <span class="kw">select</span> {
+        <span class="kw">case</span> &lt;-ctx.<span class="fn">Done</span>():
+            fmt.<span class="fn">Println</span>(<span class="str">"cancelled:"</span>, ctx.<span class="fn">Err</span>())
+            <span class="kw">return</span>
+        <span class="kw">default</span>:
+            <span class="fn">processNextItem</span>()
+        }
+    }
+}</pre></div>
+      <h4>Context values</h4>
+      <div class="code-block"><pre><span class="kw">type</span> <span class="typ">ctxKey</span> <span class="kw">string</span>
+
+ctx = context.<span class="fn">WithValue</span>(ctx, <span class="typ">ctxKey</span>(<span class="str">"userID"</span>), <span class="str">"u-123"</span>)
+
+userID := ctx.<span class="fn">Value</span>(<span class="typ">ctxKey</span>(<span class="str">"userID"</span>)).(<span class="typ">string</span>)</pre></div>
+      <div class="tip-box"><span class="tip-icon">💡</span><span>Pass context as the first argument to every function that does I/O. Never store context in a struct. Cancelling a parent context cancels all its children.</span></div>
+    </div>
+  </div>
+
+  <!-- Topic 3.4 -->
+  <div class="topic-card" >
+    <div class="topic-header" onclick="toggle(this)">
+      <span class="topic-num d3">3.4</span>
+      <span class="topic-title">Building a REST API</span>
+      <span class="topic-arrow">▶</span>
+    </div>
+    <div class="topic-body">
+      <h4>net/http with custom mux</h4>
+      <div class="code-block"><pre><span class="kw">type</span> <span class="typ">Server</span> <span class="kw">struct</span> {
+    router *http.<span class="typ">ServeMux</span>
+    store  <span class="typ">Store</span>
+}
+
+<span class="kw">func</span> <span class="fn">NewServer</span>(store <span class="typ">Store</span>) *<span class="typ">Server</span> {
+    s := &<span class="typ">Server</span>{router: http.<span class="fn">NewServeMux</span>(), store: store}
+    s.router.<span class="fn">HandleFunc</span>(<span class="str">"GET /api/users"</span>, s.<span class="fn">listUsers</span>)
+    s.router.<span class="fn">HandleFunc</span>(<span class="str">"POST /api/users"</span>, s.<span class="fn">createUser</span>)
+    s.router.<span class="fn">HandleFunc</span>(<span class="str">"GET /api/users/{id}"</span>, s.<span class="fn">getUser</span>)
+    <span class="kw">return</span> s
+}
+
+<span class="kw">func</span> (s *<span class="typ">Server</span>) <span class="fn">createUser</span>(w http.<span class="typ">ResponseWriter</span>, r *http.<span class="typ">Request</span>) {
+    <span class="kw">var</span> req <span class="typ">CreateUserRequest</span>
+    <span class="kw">if</span> err := json.<span class="fn">NewDecoder</span>(r.Body).<span class="fn">Decode</span>(&req); err != <span class="kw">nil</span> {
+        http.<span class="fn">Error</span>(w, err.<span class="fn">Error</span>(), http.StatusBadRequest)
+        <span class="kw">return</span>
+    }
+    user, err := s.store.<span class="fn">CreateUser</span>(r.<span class="fn">Context</span>(), req)
+    <span class="kw">if</span> err != <span class="kw">nil</span> {
+        http.<span class="fn">Error</span>(w, <span class="str">"internal error"</span>, http.StatusInternalServerError)
+        <span class="kw">return</span>
+    }
+    w.<span class="fn">Header</span>().<span class="fn">Set</span>(<span class="str">"Content-Type"</span>, <span class="str">"application/json"</span>)
+    w.<span class="fn">WriteHeader</span>(http.StatusCreated)
+    json.<span class="fn">NewEncoder</span>(w).<span class="fn">Encode</span>(user)
+}
+
+<span class="cmt">// Path values (Go 1.22+)</span>
+<span class="kw">func</span> (s *<span class="typ">Server</span>) <span class="fn">getUser</span>(w http.<span class="typ">ResponseWriter</span>, r *http.<span class="typ">Request</span>) {
+    id := r.PathValue(<span class="str">"id"</span>)   <span class="cmt">// extracts {id}</span>
+    ...
+}
+
+<span class="cmt">// Middleware pattern</span>
+<span class="kw">func</span> <span class="fn">logging</span>(next http.<span class="typ">Handler</span>) http.<span class="typ">Handler</span> {
+    <span class="kw">return</span> http.<span class="fn">HandlerFunc</span>(<span class="kw">func</span>(w http.<span class="typ">ResponseWriter</span>, r *http.<span class="typ">Request</span>) {
+        start := time.<span class="fn">Now</span>()
+        <span class="kw">defer</span> func() {
+            log.<span class="fn">Printf</span>(<span class="str">"%s %s %v"</span>, r.Method, r.URL.Path, time.<span class="fn">Since</span>(start))
+        }()
+        next.<span class="fn">ServeHTTP</span>(w, r)
+    })
+}</pre></div>
+    </div>
+  </div>
+
+  <!-- Topic 3.5 -->
+  <div class="topic-card" >
+    <div class="topic-header" onclick="toggle(this)">
+      <span class="topic-num d3">3.5</span>
+      <span class="topic-title">Database/SQL & Migrations</span>
+      <span class="topic-arrow">▶</span>
+    </div>
+    <div class="topic-body">
+      <h4>Connecting & querying</h4>
+      <div class="code-block"><pre><span class="kw">import</span> (
+    <span class="str">"database/sql"</span>
+    _ <span class="str">"github.com/lib/pq"</span>  <span class="cmt">// postgres driver</span>
+)
+
+db, err := sql.<span class="fn">Open</span>(<span class="str">"postgres"</span>, os.<span class="fn">Getenv</span>(<span class="str">"DATABASE_URL"</span>))
+db.<span class="fn">SetMaxOpenConns</span>(<span class="num">25</span>)
+db.<span class="fn">SetConnMaxLifetime</span>(<span class="num">5</span> * time.Minute)
+
+<span class="cmt">// Single row</span>
+<span class="kw">var</span> u <span class="typ">User</span>
+err = db.<span class="fn">QueryRowContext</span>(ctx,
+    <span class="str">"SELECT id, name, email FROM users WHERE id=$1"</span>, id).
+    <span class="fn">Scan</span>(&u.ID, &u.Name, &u.Email)
+
+<span class="cmt">// Multiple rows</span>
+rows, err := db.<span class="fn">QueryContext</span>(ctx, <span class="str">"SELECT id, name FROM users"</span>)
+<span class="kw">defer</span> rows.<span class="fn">Close</span>()
+<span class="kw">for</span> rows.<span class="fn">Next</span>() {
+    <span class="kw">var</span> u <span class="typ">User</span>
+    rows.<span class="fn">Scan</span>(&u.ID, &u.Name)
+}
+
+<span class="cmt">// Transactions</span>
+tx, err := db.<span class="fn">BeginTx</span>(ctx, <span class="kw">nil</span>)
+<span class="kw">defer func</span>() {
+    <span class="kw">if</span> err != <span class="kw">nil</span> { tx.<span class="fn">Rollback</span>() }
+}()
+_, err = tx.<span class="fn">ExecContext</span>(ctx, <span class="str">"UPDATE accounts SET bal=$1 WHERE id=$2"</span>, bal, id)
+<span class="kw">if</span> err != <span class="kw">nil</span> { <span class="kw">return</span> err }
+<span class="kw">return</span> tx.<span class="fn">Commit</span>()</pre></div>
+    </div>
+  </div>
+
+  <!-- Topic 3.6 -->
+  <div class="topic-card" >
+    <div class="topic-header" onclick="toggle(this)">
+      <span class="topic-num d3">3.6</span>
+      <span class="topic-title">Profiling, Optimization & Go Internals</span>
+      <span class="topic-arrow">▶</span>
+    </div>
+    <div class="topic-body">
+      <h4>pprof profiling</h4>
+      <div class="code-block"><pre><span class="kw">import</span> _ <span class="str">"net/http/pprof"</span>
+
+<span class="cmt">// Exposes profiling at /debug/pprof/</span>
+<span class="kw">go</span> http.<span class="fn">ListenAndServe</span>(<span class="str">"localhost:6060"</span>, <span class="kw">nil</span>)
+
+<span class="cmt"># CPU profile (30s)</span>
+$ go tool pprof http://localhost:6060/debug/pprof/profile?seconds=30
+$ go tool pprof -http=:8081 cpu.prof  <span class="cmt"># web UI</span>
+
+<span class="cmt"># Heap profile</span>
+$ go tool pprof http://localhost:6060/debug/pprof/heap
+
+<span class="cmt"># Race detector</span>
+$ go run -race main.go</pre></div>
+      <h4>Go memory model essentials</h4>
+      <ul>
+        <li>Variables escape to the heap when their lifetime exceeds the function — the compiler decides (escape analysis)</li>
+        <li>The GC is tri-color concurrent mark-and-sweep — since Go 1.14 STW pauses are under 1ms</li>
+        <li>Stack grows dynamically (starts ~8KB, copies on overflow)</li>
+        <li>Avoid allocations in hot paths: reuse buffers with <code>sync.Pool</code></li>
+      </ul>
+      <h4>sync.Pool — buffer reuse</h4>
+      <div class="code-block"><pre><span class="kw">var</span> bufPool = sync.<span class="typ">Pool</span>{
+    New: <span class="kw">func</span>() any { <span class="kw">return</span> <span class="fn">new</span>(bytes.<span class="typ">Buffer</span>) },
+}
+
+buf := bufPool.<span class="fn">Get</span>().(*bytes.<span class="typ">Buffer</span>)
+buf.<span class="fn">Reset</span>()
+<span class="kw">defer</span> bufPool.<span class="fn">Put</span>(buf)
+<span class="cmt">// use buf...</span></pre></div>
+      <h4>Build & deployment</h4>
+      <div class="code-block"><pre><span class="cmt"># Cross-compile for Linux on macOS</span>
+$ GOOS=linux GOARCH=amd64 go build -o app-linux ./cmd/server
+
+<span class="cmt"># Stripped, optimized binary</span>
+$ go build -ldflags="-s -w" -o app .
+
+<span class="cmt"># Minimal Docker image</span>
+<span class="cmt"># FROM golang:1.22 AS builder</span>
+<span class="cmt"># COPY . .</span>
+<span class="cmt"># RUN CGO_ENABLED=0 go build -o /app .</span>
+<span class="cmt"># FROM scratch</span>
+<span class="cmt"># COPY --from=builder /app /app</span>
+<span class="cmt"># ENTRYPOINT ["/app"]</span></pre></div>
+      <div class="tip-box"><span class="tip-icon">💡</span><span>Go produces a single statically-linked binary with no external runtime dependencies. The scratch Docker image trick gives you an extremely small (often 5–15MB) container for production deployment.</span></div>
+    </div>
+  </div>
+
+  <!-- Topic 3.7 -->
+  <div class="topic-card" >
+    <div class="topic-header" onclick="toggle(this)">
+      <span class="topic-num d3">3.7</span>
+      <span class="topic-title">Project: Full Mini-Service</span>
+      <span class="topic-arrow">▶</span>
+    </div>
+    <div class="topic-body">
+      <h4>Putting it all together — recommended project layout</h4>
+      <div class="code-block"><pre>myservice/
+├── cmd/
+│   └── server/
+│       └── main.go         <span class="cmt"># entry point</span>
+├── internal/
+│   ├── handler/            <span class="cmt"># HTTP handlers</span>
+│   ├── service/            <span class="cmt"># business logic</span>
+│   ├── store/              <span class="cmt"># DB layer (interface + impl)</span>
+│   └── model/              <span class="cmt"># shared domain types</span>
+├── pkg/
+│   └── middleware/         <span class="cmt"># reusable middleware</span>
+├── migrations/             <span class="cmt"># SQL files</span>
+├── go.mod
+├── go.sum
+├── Makefile
+└── Dockerfile</pre></div>
+      <h4>main.go wiring</h4>
+      <div class="code-block"><pre><span class="kw">func</span> <span class="fn">main</span>() {
+    cfg := <span class="fn">loadConfig</span>()
+
+    db, err := <span class="fn">connectDB</span>(cfg.DatabaseURL)
+    <span class="kw">if</span> err != <span class="kw">nil</span> { log.<span class="fn">Fatal</span>(err) }
+    <span class="kw">defer</span> db.<span class="fn">Close</span>()
+
+    store  := store.<span class="fn">New</span>(db)
+    svc    := service.<span class="fn">New</span>(store)
+    server := handler.<span class="fn">NewServer</span>(svc)
+
+    srv := &http.<span class="typ">Server</span>{
+        Addr:         <span class="str">":"</span> + cfg.Port,
+        Handler:      server,
+        ReadTimeout:  <span class="num">10</span> * time.Second,
+        WriteTimeout: <span class="num">30</span> * time.Second,
+        IdleTimeout:  <span class="num">60</span> * time.Second,
+    }
+
+    <span class="cmt">// Graceful shutdown</span>
+    quit := <span class="fn">make</span>(<span class="kw">chan</span> os.<span class="typ">Signal</span>, <span class="num">1</span>)
+    signal.<span class="fn">Notify</span>(quit, syscall.SIGINT, syscall.SIGTERM)
+
+    <span class="kw">go func</span>() {
+        <span class="kw">if</span> err := srv.<span class="fn">ListenAndServe</span>(); err != http.<span class="typ">ErrServerClosed</span> {
+            log.<span class="fn">Fatal</span>(err)
+        }
+    }()
+
+    &lt;-quit
+    ctx, cancel := context.<span class="fn">WithTimeout</span>(context.<span class="fn">Background</span>(), <span class="num">30</span>*time.Second)
+    <span class="kw">defer</span> <span class="fn">cancel</span>()
+    srv.<span class="fn">Shutdown</span>(ctx)
+    log.<span class="fn">Println</span>(<span class="str">"server stopped gracefully"</span>)
+}</pre></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchDay(idx) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+  document.querySelectorAll('.day-panel').forEach((p,i) => p.classList.toggle('active', i===idx));
+}
+function toggle(card) {
+  card.parentElement.classList.toggle('open');
+}
+</script>

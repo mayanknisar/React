@@ -1,0 +1,517 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.container { padding: 1rem 0; }
+.header { margin-bottom: 1.5rem; }
+.header h2 { font-size: 18px; font-weight: 500; color: var(--color-text-primary); }
+.header p { font-size: 13px; color: var(--color-text-secondary); margin-top: 4px; }
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.tab { padding: 6px 14px; font-size: 13px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); cursor: pointer; background: var(--color-background-primary); color: var(--color-text-secondary); transition: all 0.15s; }
+.tab.active { background: #EEEDFE; color: #3C3489; border-color: #AFA9EC; font-weight: 500; }
+.tab:hover:not(.active) { background: var(--color-background-secondary); }
+.qa-list { display: flex; flex-direction: column; gap: 12px; }
+.qa-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; }
+.qa-header { padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.qa-header:hover { background: var(--color-background-secondary); }
+.q-meta { display: flex; align-items: flex-start; gap: 10px; flex: 1; }
+.q-num { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); min-width: 24px; padding-top: 2px; }
+.q-text { font-size: 14px; font-weight: 500; color: var(--color-text-primary); line-height: 1.5; }
+.chevron { font-size: 12px; color: var(--color-text-tertiary); flex-shrink: 0; transition: transform 0.2s; padding-top: 3px; }
+.chevron.open { transform: rotate(180deg); }
+.qa-body { display: none; border-top: 0.5px solid var(--color-border-tertiary); padding: 16px; }
+.qa-body.open { display: block; }
+.section-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-tertiary); margin-bottom: 8px; }
+.answer-text { font-size: 13px; color: var(--color-text-primary); line-height: 1.8; }
+.code-block { background: var(--color-background-tertiary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 12px; font-family: var(--font-mono); font-size: 12px; color: var(--color-text-primary); margin-top: 10px; white-space: pre; overflow-x: auto; line-height: 1.6; }
+.tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: var(--border-radius-md); margin-right: 4px; margin-bottom: 6px; }
+.tag-blue { background: #E6F1FB; color: #0C447C; }
+.tag-purple { background: #EEEDFE; color: #3C3489; }
+.tag-teal { background: #E1F5EE; color: #085041; }
+.tag-amber { background: #FAEEDA; color: #633806; }
+.difficulty { font-size: 11px; padding: 2px 8px; border-radius: var(--border-radius-md); flex-shrink: 0; }
+.d-hard { background: #FCEBEB; color: #791F1F; }
+.d-medium { background: #FAEEDA; color: #633806; }
+.d-senior { background: #EEEDFE; color: #3C3489; }
+.divider { height: 0.5px; background: var(--color-border-tertiary); margin: 10px 0; }
+</style>
+
+<div class="container">
+  <div class="header">
+    <h2>Technical interview — PSE Cloud .Net Full Stack, Itron Inc.</h2>
+    <p>10 curated questions with detailed answers. Click any question to expand.</p>
+  </div>
+  <div class="tabs" id="tabs"></div>
+  <div class="qa-list" id="qa-list"></div>
+</div>
+
+<script>
+const categories = ["All", ".NET & C#", "Microservices", "Messaging", "Cloud & K8s", "Data & DB", "Caching", "Observability", "System Design"];
+
+const questions = [
+  {
+    cat: ".NET & C#",
+    q: "Explain the difference between IEnumerable, IQueryable, and IAsyncEnumerable in C#. When would you use each?",
+    difficulty: "Senior",
+    tags: ["C#", ".NET Core", "EF Core"],
+    answer: `IEnumerable<T> executes queries in-memory (LINQ to Objects). Once data is loaded from a DB or collection, filtering happens in your application process — fine for small datasets, expensive for large ones.
+
+IQueryable<T> builds an expression tree that a provider (like EF Core) translates to SQL, pushing filtering/sorting to the database. Always prefer IQueryable when querying a database to avoid loading unnecessary rows.
+
+IAsyncEnumerable<T> (C# 8+) streams data asynchronously — ideal for large result sets, real-time feeds, or reading from Kafka/streams without buffering the entire dataset in memory.`,
+    code: `// IQueryable - SQL WHERE is generated, only filtered rows hit memory
+IQueryable<Device> query = dbContext.Devices
+    .Where(d => d.Status == "Active")   // translates to SQL WHERE
+    .OrderBy(d => d.DeviceId);          // translates to SQL ORDER BY
+
+// IAsyncEnumerable - streams large meter readings without loading all
+await foreach (var reading in dbContext.MeterReadings
+    .Where(r => r.Timestamp > cutoff)
+    .AsAsyncEnumerable())
+{
+    await ProcessReadingAsync(reading);
+}`
+  },
+  {
+    cat: ".NET & C#",
+    q: "How does Entity Framework Core handle change tracking, and what are the performance implications in a high-throughput application?",
+    difficulty: "Hard",
+    tags: ["EF Core", "Performance", "C#"],
+    answer: `EF Core's change tracker takes a snapshot of every entity you load and compares it on SaveChanges(). In a high-throughput scenario (e.g., ingesting thousands of AMI meter readings), this overhead is significant.
+
+Key strategies:
+1. AsNoTracking() for read-only queries — skips snapshot, ~30% faster reads
+2. Bulk operations with EF Extensions / ExecuteUpdateAsync for mass updates instead of load-modify-save
+3. Compiled queries to avoid expression tree parsing on every call
+4. Batching inserts using AddRange + single SaveChanges instead of one-by-one`,
+    code: `// Read-only — no tracking overhead
+var devices = await dbContext.Devices
+    .AsNoTracking()
+    .Where(d => d.Region == "West")
+    .ToListAsync();
+
+// Bulk update — avoids loading 10k rows into memory
+await dbContext.MeterReadings
+    .Where(r => r.Status == "Pending")
+    .ExecuteUpdateAsync(s => s
+        .SetProperty(r => r.Status, "Processed")
+        .SetProperty(r => r.ProcessedAt, DateTime.UtcNow));
+
+// Compiled query (define once, reuse across requests)
+private static readonly Func<AppDbContext, int, Task<Device?>> GetDeviceById =
+    EF.CompileAsyncQuery((AppDbContext ctx, int id) =>
+        ctx.Devices.FirstOrDefault(d => d.Id == id));`
+  },
+  {
+    cat: "Microservices",
+    q: "What are the Saga and Outbox patterns? Walk us through a real-world scenario where both are needed together.",
+    difficulty: "Hard",
+    tags: ["Microservices", "Patterns", "Distributed"],
+    answer: `Saga pattern manages distributed transactions across microservices without 2PC. Each step publishes an event; on failure, compensating transactions roll back prior steps. Two variants: Choreography (event-driven, decoupled) and Orchestration (a central saga orchestrator drives steps).
+
+Outbox pattern solves the dual-write problem: you cannot atomically write to a DB and publish to a message broker. Instead, write the event to an "outbox" table in the same DB transaction, then a relay process reads and publishes it.
+
+Real scenario — AMI meter provisioning:
+1. Provisioning Service saves new meter + outbox event (one DB transaction)
+2. Relay publishes MeterProvisioned to Kafka
+3. Billing Service subscribes → creates billing account
+4. Network Service subscribes → registers device on network
+5. If Network Service fails → it publishes ProvisioningFailed → Billing Service compensates (deletes account)`,
+    code: `// Step 1: Save meter + outbox in one transaction
+await using var tx = await dbContext.Database.BeginTransactionAsync();
+dbContext.Meters.Add(new Meter { Id = meterId, Status = "Provisioning" });
+dbContext.OutboxMessages.Add(new OutboxMessage {
+    EventType = "MeterProvisioned",
+    Payload = JsonSerializer.Serialize(new { MeterId = meterId }),
+    CreatedAt = DateTime.UtcNow
+});
+await dbContext.SaveChangesAsync();
+await tx.CommitAsync();
+
+// Step 2: Background relay (runs separately, polls outbox)
+var pending = await dbContext.OutboxMessages
+    .Where(m => !m.Published).ToListAsync();
+foreach (var msg in pending) {
+    await kafkaProducer.ProduceAsync("meter-events", msg.Payload);
+    msg.Published = true;
+}
+await dbContext.SaveChangesAsync();`
+  },
+  {
+    cat: "Messaging",
+    q: "Compare RabbitMQ and Kafka. In what scenarios would you choose one over the other for an AMI platform?",
+    difficulty: "Medium",
+    tags: ["RabbitMQ", "Kafka", "Architecture"],
+    answer: `RabbitMQ is a traditional message broker — push-based, supports complex routing (topics, fanout, headers), messages are deleted after acknowledgement. Ideal for task queues, RPC-style request/reply, and lower-throughput command routing (e.g., sending firmware update commands to individual meters).
+
+Kafka is a distributed log — pull-based, messages are retained for a configurable period, consumers maintain their own offset, and it handles millions of events/second. Ideal for event streaming, event sourcing, and scenarios where multiple consumers need to replay events (e.g., billing, analytics, audit all consuming meter readings independently).
+
+For Itron's AMI platform:
+- Use Kafka for meter telemetry ingestion (high-throughput, multiple downstream consumers, replay capability)
+- Use RabbitMQ for command-and-control (device commands, config pushes — low latency, acknowledgement important, complex routing to specific device groups)`,
+    code: `// Kafka consumer with offset management (MassTransit / Confluent SDK)
+services.AddMassTransit(x => {
+    x.UsingRabbitMq((ctx, cfg) => {   // for commands
+        cfg.ReceiveEndpoint("device-commands", e => {
+            e.ConfigureConsumer<DeviceCommandConsumer>(ctx);
+        });
+    });
+});
+
+// Kafka for meter readings (high throughput)
+services.AddMassTransit(x => {
+    x.UsingRider(r => {
+        r.UsingKafka((ctx, k) => {
+            k.Host("kafka:9092");
+            k.TopicEndpoint<MeterReading>("meter-readings", "billing-group", e => {
+                e.AutoOffsetReset = AutoOffsetReset.Earliest;
+                e.ConfigureConsumer<MeterReadingConsumer>(ctx);
+            });
+        });
+    });
+});`
+  },
+  {
+    cat: "Cloud & K8s",
+    q: "Explain Kubernetes resource management — requests vs limits — and how you'd configure HPA for a .NET microservice handling variable AMI load.",
+    difficulty: "Hard",
+    tags: ["Kubernetes", "AKS", "Azure", "HPA"],
+    answer: `Requests are what K8s guarantees and uses for scheduling. Limits are the cap — if a container exceeds CPU limit, it's throttled; if it exceeds memory limit, it's OOM-killed.
+
+For a .NET service, set requests based on steady-state baseline and limits at ~2x requests (to allow burst). Avoid setting limits too tight — .NET's GC needs headroom.
+
+HPA (Horizontal Pod Autoscaler) scales pod count based on metrics. For AMI workloads, CPU alone is insufficient — also scale on Kafka consumer lag (custom metrics via KEDA) so you scale when the queue backs up, not after CPU is already saturated.`,
+    code: `# deployment.yaml — resource configuration
+resources:
+  requests:
+    cpu: "250m"
+    memory: "512Mi"
+  limits:
+    cpu: "1000m"
+    memory: "1Gi"
+
+---
+# HPA on CPU + custom Kafka lag metric via KEDA
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: meter-processor-scaler
+spec:
+  scaleTargetRef:
+    name: meter-processor
+  minReplicaCount: 2
+  maxReplicaCount: 20
+  triggers:
+  - type: kafka
+    metadata:
+      bootstrapServers: kafka:9092
+      topic: meter-readings
+      consumerGroup: billing-group
+      lagThreshold: "100"   # scale up when lag > 100 msgs per partition`
+  },
+  {
+    cat: "Cloud & K8s",
+    q: "Walk us through setting up a CI/CD pipeline on Azure for a .NET microservice that deploys to AKS with zero downtime.",
+    difficulty: "Medium",
+    tags: ["Azure", "CI/CD", "AKS", "DevOps"],
+    answer: `A production-grade pipeline for AKS has these stages:
+
+1. Build: restore, build, run unit tests, code coverage gate
+2. Docker: build image, push to Azure Container Registry (ACR) with commit SHA tag
+3. Security: image scan (Trivy / Defender for Containers)
+4. Staging deploy: helm upgrade --install to staging namespace, run smoke tests
+5. Production deploy: rolling update with readinessProbe ensuring zero-downtime
+6. Post-deploy: verify pod health, rollback if error rate spikes
+
+Zero-downtime is achieved by combining K8s rolling update strategy with properly configured readiness probes — K8s won't route traffic to a pod until it passes the probe.`,
+    code: `# azure-pipelines.yml (abbreviated)
+stages:
+- stage: Build
+  jobs:
+  - job: BuildAndTest
+    steps:
+    - script: dotnet test --collect:"XPlat Code Coverage"
+    - task: Docker@2
+      inputs:
+        command: buildAndPush
+        repository: myacr.azurecr.io/meter-service
+        tags: $(Build.SourceVersion)   # SHA tag for traceability
+
+- stage: Deploy
+  jobs:
+  - deployment: DeployAKS
+    steps:
+    - task: HelmDeploy@0
+      inputs:
+        command: upgrade
+        chartName: meter-service
+        overrideValues: image.tag=$(Build.SourceVersion)
+
+# deployment.yaml — zero downtime config
+strategy:
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 0
+readinessProbe:
+  httpGet:
+    path: /health/ready
+    port: 8080
+  initialDelaySeconds: 10
+  periodSeconds: 5`
+  },
+  {
+    cat: "Data & DB",
+    q: "You have time-series meter readings arriving at 50,000 events/sec. How would you design the storage strategy using Cassandra and when would you involve a Data Lake?",
+    difficulty: "Hard",
+    tags: ["Cassandra", "Data Lake", "Architecture"],
+    answer: `Cassandra is ideal for time-series IoT data because of its write-optimized LSM storage, linear horizontal scale, and tunable consistency. The key design decisions:
+
+Partition key: (device_id, date_bucket) — keeps related reads on same node, prevents hot partitioning if just device_id. Clustering key: timestamp DESC — returns most recent readings first.
+
+TTL: Set TTL on raw readings (e.g., 90 days) to auto-expire, preventing unbounded growth.
+
+Data Lake (Azure Data Lake / Databricks) for:
+- Historical analytics beyond 90 days
+- ML model training (anomaly detection, outage prediction)
+- Batch aggregations (monthly billing runs)
+
+Stream raw events from Kafka → Cassandra (operational, low-latency reads) AND → Azure Data Lake (via Event Hub capture or Kafka connector) in parallel.`,
+    code: `-- Cassandra table design for meter readings
+CREATE TABLE meter_readings (
+    device_id     UUID,
+    date_bucket   TEXT,       -- 'YYYY-MM-DD' for manageable partition size
+    timestamp     TIMESTAMP,
+    reading_kwh   DECIMAL,
+    quality_code  TINYINT,
+    PRIMARY KEY ((device_id, date_bucket), timestamp)
+) WITH CLUSTERING ORDER BY (timestamp DESC)
+  AND default_time_to_live = 7776000  -- 90 days TTL
+  AND compaction = {
+    'class': 'TimeWindowCompactionStrategy',
+    'compaction_window_size': 1,
+    'compaction_window_unit': 'DAYS'
+  };
+
+-- Retrieval — last 24 hours for a device
+SELECT * FROM meter_readings
+WHERE device_id = ? AND date_bucket = '2026-04-06'
+LIMIT 1000;`
+  },
+  {
+    cat: "Caching",
+    q: "How would you implement a multi-level caching strategy with Redis for a distributed .NET microservices application? Handle cache invalidation.",
+    difficulty: "Hard",
+    tags: ["Redis", "Caching", ".NET", "Distributed"],
+    answer: `Multi-level caching:
+L1 — In-process (IMemoryCache): sub-millisecond, but per-pod (inconsistent across replicas). Use for immutable/slowly-changing config data with short TTL.
+L2 — Redis (IDistributedCache): shared across all pods, consistent, ~1–2ms latency.
+
+Cache invalidation strategies:
+- TTL-based: simplest, eventual consistency acceptable
+- Write-through: update cache on every write (consistency at write cost)
+- Pub/Sub invalidation: on data change, publish an event; all pods evict from L1. Redis pub/sub or a dedicated invalidation topic works well.
+
+For AMI: cache device configuration (changes rarely), meter rate plans (changes on billing cycle). Never cache raw readings (too volatile, too large).`,
+    code: `// Multi-level cache service in .NET
+public class DeviceConfigCache
+{
+    private readonly IMemoryCache _l1;
+    private readonly IDistributedCache _l2;    // Redis
+    private readonly IDatabase _redisDb;
+
+    public async Task<DeviceConfig?> GetAsync(string deviceId)
+    {
+        // L1 hit
+        if (_l1.TryGetValue(deviceId, out DeviceConfig? cached)) return cached;
+
+        // L2 hit
+        var json = await _l2.GetStringAsync(deviceId);
+        if (json != null) {
+            var config = JsonSerializer.Deserialize<DeviceConfig>(json);
+            _l1.Set(deviceId, config, TimeSpan.FromSeconds(30));  // short L1 TTL
+            return config;
+        }
+
+        // Cache miss → DB
+        var fromDb = await _repo.GetDeviceConfigAsync(deviceId);
+        if (fromDb != null) {
+            await _l2.SetStringAsync(deviceId,
+                JsonSerializer.Serialize(fromDb),
+                new DistributedCacheEntryOptions {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+                });
+            _l1.Set(deviceId, fromDb, TimeSpan.FromSeconds(30));
+        }
+        return fromDb;
+    }
+
+    // Pub/sub invalidation when config changes
+    public async Task InvalidateAsync(string deviceId) {
+        _l1.Remove(deviceId);
+        await _l2.RemoveAsync(deviceId);
+        await _redisDb.PublishAsync("config-invalidated", deviceId);
+    }
+}`
+  },
+  {
+    cat: "Observability",
+    q: "How would you implement distributed tracing across microservices using OpenTelemetry and surface it in Grafana?",
+    difficulty: "Medium",
+    tags: ["OpenTelemetry", "Grafana", "Monitoring"],
+    answer: `OpenTelemetry (OTel) is the CNCF standard for collecting traces, metrics, and logs. In .NET, auto-instrumentation handles HttpClient, EF Core, ASP.NET, and you add custom spans for business logic.
+
+Architecture:
+1. App → OTel SDK → OTLP exporter → OTel Collector
+2. Collector fans out → Tempo (traces), Prometheus (metrics), Loki (logs)
+3. Grafana reads all three — correlate a trace ID from a slow request with the matching log lines and CPU spike on the same dashboard.
+
+Key practices: propagate trace context across Kafka messages (headers), set meaningful span names, add device_id as a span attribute so you can filter all traces for a specific meter.`,
+    code: `// Program.cs — OTel setup in .NET
+builder.Services.AddOpenTelemetry()
+    .WithTracing(tracing => tracing
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddEntityFrameworkCoreInstrumentation()
+        .AddSource("MeterService")   // custom spans
+        .AddOtlpExporter(opt =>
+            opt.Endpoint = new Uri("http://otel-collector:4317")))
+    .WithMetrics(metrics => metrics
+        .AddAspNetCoreInstrumentation()
+        .AddRuntimeInstrumentation()
+        .AddOtlpExporter());
+
+// Custom span in business logic
+private static readonly ActivitySource _tracer = new("MeterService");
+
+public async Task ProcessReadingAsync(MeterReading reading)
+{
+    using var span = _tracer.StartActivity("ProcessMeterReading");
+    span?.SetTag("device.id", reading.DeviceId);
+    span?.SetTag("reading.kwh", reading.ValueKwh);
+
+    await _validator.ValidateAsync(reading);   // auto child span
+    await _repo.SaveAsync(reading);
+}`
+  },
+  {
+    cat: "System Design",
+    q: "Design a fault-tolerant, real-time AMI meter data ingestion system that handles 50,000 devices sending readings every 15 minutes. Walk through your architecture decisions.",
+    difficulty: "Hard",
+    tags: ["System Design", "Architecture", "Scalability"],
+    answer: `Load calculation: 50,000 devices × 4 readings/hour = 200,000 events/hour = ~55 events/sec average, but with burst (all devices syncing at :00/:15/:30/:45) = spikes to ~5,000/sec.
+
+Architecture:
+
+1. Ingestion Gateway (ASP.NET Core on AKS): Accepts HTTP/MQTT from meters, validates, publishes to Kafka. Stateless, scale horizontally. Rate limit per device to prevent floods.
+
+2. Kafka (3 brokers, 30 partitions on meter-readings topic): Partitioned by device_id → ensures ordering per device. Replication factor 3 for durability.
+
+3. Processing Layer (Kafka consumers on AKS with KEDA): Validate readings, detect anomalies, enrich with device metadata (from Redis cache), write to Cassandra.
+
+4. Storage: Cassandra for operational (last 90 days, low latency reads), Azure Data Lake for historical + ML.
+
+5. Dead Letter Queue: Failed messages → DLQ topic → alert + manual review.
+
+6. Observability: OTel traces + Grafana dashboard showing ingestion lag, error rate, p99 latency per device group.
+
+Fault tolerance: Kafka retention 7 days (replay on consumer failure), Cassandra replication 3 (survives node loss), circuit breakers (Polly) on downstream DB calls.`,
+    code: `// Ingestion gateway — fast path, async enqueue
+[HttpPost("readings")]
+public async Task<IActionResult> IngestReading([FromBody] MeterReadingDto dto)
+{
+    // Validate signature/auth
+    if (!_auth.ValidateDevice(dto.DeviceId, dto.Signature))
+        return Unauthorized();
+
+    // Publish to Kafka — non-blocking, returns 202 immediately
+    await _producer.ProduceAsync("meter-readings",
+        new Message<string, string> {
+            Key = dto.DeviceId,           // partition by device
+            Value = JsonSerializer.Serialize(dto),
+            Headers = new Headers {
+                { "trace-id", Encoding.UTF8.GetBytes(Activity.Current?.TraceId.ToString() ?? "") }
+            }
+        });
+
+    return Accepted();   // 202 — don't wait for DB write
+}
+
+// Consumer with Polly retry + circuit breaker
+public async Task ConsumeAsync(ConsumeResult<string, string> result)
+{
+    var reading = JsonSerializer.Deserialize<MeterReadingDto>(result.Message.Value);
+    await _retryPolicy.ExecuteAsync(async () => {
+        var enriched = await _enricher.EnrichAsync(reading);  // Redis cache hit
+        await _cassandraRepo.SaveAsync(enriched);
+    });
+}`
+  }
+];
+
+let activeCategory = "All";
+
+function renderTabs() {
+  const tabsEl = document.getElementById("tabs");
+  categories.forEach(cat => {
+    const btn = document.createElement("button");
+    btn.className = "tab" + (cat === activeCategory ? " active" : "");
+    btn.textContent = cat;
+    btn.onclick = () => { activeCategory = cat; render(); };
+    tabsEl.appendChild(btn);
+  });
+}
+
+function render() {
+  document.querySelectorAll(".tab").forEach(t => {
+    t.className = "tab" + (t.textContent === activeCategory ? " active" : "");
+  });
+
+  const list = document.getElementById("qa-list");
+  list.innerHTML = "";
+  const filtered = activeCategory === "All" ? questions : questions.filter(q => q.cat === activeCategory);
+
+  filtered.forEach((item, idx) => {
+    const card = document.createElement("div");
+    card.className = "qa-card";
+
+    const diffClass = item.difficulty === "Hard" ? "d-hard" : item.difficulty === "Senior" ? "d-senior" : "d-medium";
+
+    card.innerHTML = `
+      <div class="qa-header" onclick="toggle(this)">
+        <div class="q-meta">
+          <span class="q-num">Q${idx + 1}</span>
+          <span class="q-text">${item.q}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">
+          <span class="difficulty ${diffClass}">${item.difficulty}</span>
+          <span class="chevron">▼</span>
+        </div>
+      </div>
+      <div class="qa-body">
+        <div style="margin-bottom:10px">
+          ${item.tags.map(t => `<span class="tag tag-purple">${t}</span>`).join("")}
+        </div>
+        <div class="section-label">Answer</div>
+        <div class="answer-text">${item.answer.replace(/\n\n/g, '<br><br>').replace(/\n(\d+\.)/g, '<br>$1')}</div>
+        ${item.code ? `<div class="section-label" style="margin-top:14px">Example</div><div class="code-block">${escapeHtml(item.code)}</div>` : ""}
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function toggle(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector(".chevron");
+  const isOpen = body.classList.contains("open");
+  body.classList.toggle("open", !isOpen);
+  chevron.classList.toggle("open", !isOpen);
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+renderTabs();
+render();
+</script>
