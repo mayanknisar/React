@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const createHeading = () => ({
   mainTitle: "",
@@ -24,9 +24,38 @@ const initialForm = {
   categories: [createCategory()]
 };
 
-function AddTopicForm({ onAddTopic }) {
+const toFormShape = (initialData) => ({
+  title: initialData?.title ?? "",
+  headings:
+    initialData?.headings?.map((heading) => ({
+      mainTitle: heading.mainTitle ?? "",
+      subTitle: heading.subTitle ?? "",
+      description: heading.description ?? "",
+      tags: heading.tags ?? [],
+      tagInput: ""
+    })) ?? [createHeading()],
+  categories:
+    initialData?.categories?.map((category) => ({
+      name: category.name ?? "",
+      paragraphs:
+        category.paragraphs?.map((paragraph) => ({
+          title: paragraph.title ?? "",
+          description: paragraph.description ?? ""
+        })) ?? [createParagraph()]
+    })) ?? [createCategory()]
+});
+
+function AddTopicForm({ onAddTopic, initialData = null, submitLabel = "Add Topic" }) {
   const [form, setForm] = useState(initialForm);
   const [submitError, setSubmitError] = useState("");
+
+  useEffect(() => {
+    if (initialData) {
+      setForm(toFormShape(initialData));
+      return;
+    }
+    setForm(initialForm);
+  }, [initialData]);
 
   const onChange = (event) => {
     const { name, value } = event.target;
@@ -158,12 +187,14 @@ function AddTopicForm({ onAddTopic }) {
 
     setSubmitError("");
     onAddTopic(form);
-    setForm(initialForm);
+    if (!initialData) {
+      setForm(initialForm);
+    }
   };
 
   return (
     <section className="panel">
-      <h2 className="panel-title">Add New Learning Topic</h2>
+      <h2 className="panel-title">{initialData ? "Edit Learning Topic" : "Add New Learning Topic"}</h2>
       <form className="topic-form" onSubmit={onSubmit}>
         <input
           name="title"
@@ -320,7 +351,7 @@ function AddTopicForm({ onAddTopic }) {
         </div>
 
         {submitError ? <p className="error-text">{submitError}</p> : null}
-        <button type="submit">Add Topic</button>
+        <button type="submit">{submitLabel}</button>
       </form>
     </section>
   );

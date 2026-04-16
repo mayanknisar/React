@@ -1,10 +1,37 @@
 import { useEffect, useState } from "react";
+import { renderCourseTemplateHtml } from "../utils/courseHtmlTemplate";
 
-function LearningViewer({ topic }) {
+function LearningViewer({ topic, onEditTopic }) {
   const [htmlContent, setHtmlContent] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
+
+  useEffect(() => {
+    // HTML injected through dangerouslySetInnerHTML does not execute <script> tags.
+    // Register these handlers globally once so inline onclick hooks keep working.
+    window.switchTab = (idx) => {
+      document
+        .querySelectorAll(".tab-btn")
+        .forEach((button, index) => button.classList.toggle("active", index === idx));
+      document
+        .querySelectorAll(".tab-panel")
+        .forEach((panel, index) => panel.classList.toggle("active", index === idx));
+    };
+
+    window.switchDay = (idx) => {
+      document
+        .querySelectorAll(".tab-btn")
+        .forEach((button, index) => button.classList.toggle("active", index === idx));
+      document
+        .querySelectorAll(".day-panel")
+        .forEach((panel, index) => panel.classList.toggle("active", index === idx));
+    };
+
+    window.toggle = (headerEl) => {
+      headerEl?.parentElement?.classList?.toggle("open");
+    };
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -14,6 +41,13 @@ function LearningViewer({ topic }) {
 
       if (topic.sourceType === "custom") {
         setHtmlContent("");
+        setError("");
+        setLoading(false);
+        return;
+      }
+
+      if (topic.sourceType === "generated-course") {
+        setHtmlContent(renderCourseTemplateHtml(topic.templateData || {}));
         setError("");
         setLoading(false);
         return;
@@ -64,7 +98,14 @@ function LearningViewer({ topic }) {
 
   return (
     <section className="panel viewer-panel">
-      <h2 className="panel-title">{topic.title}</h2>
+      <div className="inline-actions">
+        <h2 className="panel-title">{topic.title}</h2>
+        {topic.sourceType === "custom" || topic.sourceType === "generated-course" ? (
+          <button type="button" className="back-button" onClick={() => onEditTopic?.(topic)}>
+            Edit
+          </button>
+        ) : null}
+      </div>
 
       {topic.sourceType === "custom" ? (
         <article className="custom-content">
@@ -116,7 +157,7 @@ function LearningViewer({ topic }) {
       {loading ? <p>Loading content...</p> : null}
       {error ? <p className="error-text">{error}</p> : null}
 
-      {!loading && !error && topic.sourceType === "html" ? (
+      {!loading && !error && (topic.sourceType === "html" || topic.sourceType === "generated-course") ? (
         <article
           className="html-content"
           dangerouslySetInnerHTML={{ __html: htmlContent }}

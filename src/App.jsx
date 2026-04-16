@@ -8,9 +8,22 @@ import defaultLearningTopics from "./data/learningTopics";
 
 const STORAGE_KEY = "learning-dashboard-custom-topics";
 
+const loadCustomTopicsFromStorage = () => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    console.error("Failed to read custom topics from localStorage:", error);
+    return [];
+  }
+};
+
 function App() {
   const [currentPage, setCurrentPage] = useState("menu");
-  const [customTopics, setCustomTopics] = useState([]);
+  const [customTopics, setCustomTopics] = useState(loadCustomTopicsFromStorage);
+  const [editingTopicId, setEditingTopicId] = useState("");
   const topics = useMemo(
     () => [...defaultLearningTopics, ...customTopics],
     [customTopics]
@@ -21,20 +34,10 @@ function App() {
     () => topics.find((topic) => topic.id === activeTopicId),
     [topics, activeTopicId]
   );
-
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) {
-        setCustomTopics(parsed);
-      }
-    } catch (error) {
-      console.error("Failed to read custom topics from localStorage:", error);
-    }
-  }, []);
+  const editingTopic = useMemo(
+    () => customTopics.find((topic) => topic.id === editingTopicId),
+    [customTopics, editingTopicId]
+  );
 
   useEffect(() => {
     try {
@@ -45,9 +48,9 @@ function App() {
   }, [customTopics]);
 
   const handleAddTopic = (formData) => {
-    const topicId = `${formData.title}-${Date.now()}`
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-");
+    const topicId = editingTopicId
+      ? editingTopicId
+      : `${formData.title}-${Date.now()}`.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 
     const categories = formData.categories ?? [];
     const headings = formData.headings ?? [];
@@ -65,12 +68,57 @@ function App() {
       sourceType: "custom"
     };
 
-    setCustomTopics((prev) => [...prev, newTopic]);
+    setCustomTopics((prev) => {
+      if (!editingTopicId) {
+        return [...prev, newTopic];
+      }
+      return prev.map((topic) => (topic.id === editingTopicId ? newTopic : topic));
+    });
+    setEditingTopicId("");
     setActiveTopicId(topicId);
     setCurrentPage("topic-view");
   };
 
+  const handleSaveGeneratedCourse = (courseFormData) => {
+    const title = courseFormData.title?.trim() || "Generated Course";
+    const topicId = editingTopicId
+      ? editingTopicId
+      : `${title}-${Date.now()}`.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    const tabs = courseFormData.tabs ?? [];
+    const firstTab = tabs[0];
+
+    const newTopic = {
+      id: topicId,
+      title,
+      category: "Generated Course",
+      level: "Template",
+      description: firstTab?.intro?.trim() || `${tabs.length} tab(s)`,
+      sourceType: "generated-course",
+      templateData: courseFormData
+    };
+
+    setCustomTopics((prev) => {
+      if (!editingTopicId) {
+        return [...prev, newTopic];
+      }
+      return prev.map((topic) => (topic.id === editingTopicId ? newTopic : topic));
+    });
+    //setEditingTopicId("");
+   // setActiveTopicId(topicId);
+    //setCurrentPage("topic-view");
+  };
+
+  const handleEditTopic = (topic) => {
+    if (topic.sourceType !== "custom" && topic.sourceType !== "generated-course") {
+      return;
+    }
+
+    setEditingTopicId(topic.id);
+    setCurrentPage(topic.sourceType === "generated-course" ? "html-generator" : "add-topic");
+  };
+
   const handleMenuSelect = (page) => {
+    setEditingTopicId("");
     if (page === "tools") {
       setCurrentPage("tools-list");
       return;
@@ -79,6 +127,7 @@ function App() {
   };
 
   const handleTopicSelect = (topicId) => {
+    setEditingTopicId("");
     setActiveTopicId(topicId);
     setCurrentPage("topic-view");
   };
@@ -88,6 +137,7 @@ function App() {
       setCurrentPage("tools-list");
       return;
     }
+    setEditingTopicId("");
     setCurrentPage("menu");
   };
 
@@ -111,14 +161,31 @@ function App() {
           topics={topics}
           activeTopicId={activeTopicId}
           onSelect={handleTopicSelect}
+          onEditTopic={handleEditTopic}
         />
       ) : null}
 
-      {currentPage === "topic-view" ? <LearningViewer topic={activeTopic} /> : null}
+      {currentPage === "topic-view" ? (
+        <LearningViewer topic={activeTopic} onEditTopic={handleEditTopic} />
+      ) : null}
 
-      {currentPage === "add-topic" ? <AddTopicForm onAddTopic={handleAddTopic} /> : null}
+      {currentPage === "add-topic" ? (
+        <AddTopicForm
+          onAddTopic={handleAddTopic}
+          initialData={editingTopic?.sourceType === "custom" ? editingTopic : null}
+          submitLabel={editingTopicId ? "Update Topic" : "Add Topic"}
+        />
+      ) : null}
 
-      {currentPage === "html-generator" ? <HtmlCourseGenerator /> : null}
+      {currentPage === "html-generator" ? (
+        <HtmlCourseGenerator
+          onSaveCourse={handleSaveGeneratedCourse}
+          initialData={
+            editingTopic?.sourceType === "generated-course" ? editingTopic.templateData : null
+          }
+          submitLabel={editingTopicId ? "Update Generated Course" : "Save To Learning Topics"}
+        />
+      ) : null}
     </main>
   );
 }
