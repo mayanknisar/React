@@ -189,13 +189,13 @@ function HtmlCourseGenerator({
 
   return (
     <section className="generator-layout">
-       
+
       <div className="panel">
         <div className="inline-actions">
           <h2 className="panel-title">{initialData ? "Edit Generated Course HTML" : "Generate HTML Like Go Crash Course"}
           </h2>
           <div className="menu-actions">
-            <button type="button" className="back-button"  onClick={saveCourse}>
+            <button type="button" className="back-button" onClick={saveCourse}>
               {submitLabel}
             </button>
           </div>
@@ -324,6 +324,7 @@ function HtmlCourseGenerator({
                               <option value="code">Code Block</option>
                               <option value="tip">Tip Box</option>
                               <option value="concepts">Concept Pills</option>
+                              <option value="html">HTML Content</option>
                             </select>
 
                             <input

@@ -2,3 +2,4 @@ node_modules/
 dist/
 src/data/data.json
 scripts/extractGolangTemplateJson.mjs
+htmls/.DS_Store

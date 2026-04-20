@@ -52,6 +52,10 @@ const renderBlock = (block) => {
     )}</span></div>`;
   }
 
+  if (block.type === "html") {
+    return `${heading}      <div class="html-block">${block.content || ""}</div>`;
+  }
+
   if (block.type === "list") {
     const items = block.items
       .filter((item) => item.trim())
@@ -118,21 +122,21 @@ export const renderCourseTemplateHtml = (form) => {
   <p>${renderInline(form.subtitle || "Course subtitle")}</p>
   <div class="badges">
 ${tabs
-  .map((tab) => `    <span class="badge">${renderInline(tab.label || "Tab")} · ${renderInline(tab.title || "Module")}</span>`)
-  .join("\n")}
+      .map((tab) => `    <span class="badge">${renderInline(tab.label || "Tab")} · ${renderInline(tab.title || "Module")}</span>`)
+      .join("\n")}
   </div>
 </div>`.trim();
 
   const nav = `
 <div class="nav-tabs">
 ${tabs
-  .map(
-    (tab, index) =>
-      `  <button class="tab-btn ${index === 0 ? "active" : ""}" onclick="switchTab(${index})">${renderInline(
-        tab.label || `Tab ${index + 1}`
-      )} · ${renderInline(tab.title || "Module")}</button>`
-  )
-  .join("\n")}
+      .map(
+        (tab, index) =>
+          `  <button class="tab-btn ${index === 0 ? "active" : ""}" onclick="switchTab(${index})">${renderInline(
+            tab.label || `Tab ${index + 1}`
+          )} · ${renderInline(tab.title || "Module")}</button>`
+      )
+      .join("\n")}
 </div>`.trim();
 
   const panels = tabs
