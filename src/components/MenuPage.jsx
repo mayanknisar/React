@@ -17,6 +17,9 @@ function MenuPage({ onSelectPage }) {
         >
           Generate Course HTML
         </button>
+        <button type="button" className="menu-button" onClick={() => onSelectPage("settings")}>
+          Settings
+        </button>
       </div>
     </section>
   );

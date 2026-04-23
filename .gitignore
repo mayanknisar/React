@@ -1,5 +1,5 @@
 node_modules/
 dist/
-src/data/data.json
+src/data/
 scripts/extractGolangTemplateJson.mjs
 htmls/.DS_Store

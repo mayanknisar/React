@@ -4,6 +4,7 @@ import HtmlCourseGenerator from "./components/HtmlCourseGenerator";
 import LearningList from "./components/LearningList";
 import LearningViewer from "./components/LearningViewer";
 import MenuPage from "./components/MenuPage";
+import SettingsPage from "./components/SettingsPage";
 import defaultLearningTopics from "./data/learningTopics";
 
 const STORAGE_KEY = "learning-dashboard-custom-topics";
@@ -104,19 +105,19 @@ function App() {
       return prev.map((topic) => (topic.id === editingTopicId ? newTopic : topic));
     });
     //setEditingTopicId("");
-   // setActiveTopicId(topicId);
+    // setActiveTopicId(topicId);
     //setCurrentPage("topic-view");
   };
 
   const handleEditTopic = (topic) => {
     if (topic.sourceType !== "custom" && topic.sourceType !== "generated-course") {
       return;
+
     }
 
     setEditingTopicId(topic.id);
     setCurrentPage(topic.sourceType === "generated-course" ? "html-generator" : "add-topic");
   };
-
   const handleMenuSelect = (page) => {
     setEditingTopicId("");
     if (page === "tools") {
@@ -175,9 +176,7 @@ function App() {
           initialData={editingTopic?.sourceType === "custom" ? editingTopic : null}
           submitLabel={editingTopicId ? "Update Topic" : "Add Topic"}
         />
-      ) : null}
-
-      {currentPage === "html-generator" ? (
+      ) : null}      {currentPage === "html-generator" ? (
         <HtmlCourseGenerator
           onSaveCourse={handleSaveGeneratedCourse}
           initialData={
@@ -186,6 +185,11 @@ function App() {
           submitLabel={editingTopicId ? "Update Generated Course" : "Save To Learning Topics"}
         />
       ) : null}
+
+      {currentPage === "settings" ? (
+        <SettingsPage onBack={() => setCurrentPage("menu")} />
+      ) : null}
+
     </main>
   );
 }
