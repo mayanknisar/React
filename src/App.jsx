@@ -133,6 +133,10 @@ function App() {
     setCurrentPage("topic-view");
   };
 
+  const handleImportTopics = (newTopics) => {
+    setCustomTopics((prev) => [...prev, ...newTopics]);
+  };
+
   const handleBack = () => {
     if (currentPage === "topic-view") {
       setCurrentPage("tools-list");
@@ -187,7 +191,10 @@ function App() {
       ) : null}
 
       {currentPage === "settings" ? (
-        <SettingsPage onBack={() => setCurrentPage("menu")} />
+        <SettingsPage
+          onBack={() => setCurrentPage("menu")}
+          onAddTopics={handleImportTopics}
+        />
       ) : null}
 
     </main>
