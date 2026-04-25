@@ -5,6 +5,8 @@ import LearningList from "./components/LearningList";
 import LearningViewer from "./components/LearningViewer";
 import MenuPage from "./components/MenuPage";
 import SettingsPage from "./components/SettingsPage";
+import Dashboard from "./components/Dashboard";
+import ThemeToggle from "./components/ThemeToggle";
 import defaultLearningTopics from "./data/learningTopics";
 
 const STORAGE_KEY = "learning-dashboard-custom-topics";
@@ -30,6 +32,11 @@ function App() {
     [customTopics]
   );
   const [activeTopicId, setActiveTopicId] = useState(defaultLearningTopics[0].id);
+  const [theme, setTheme] = useState(() => {
+    const savedTheme = localStorage.getItem("learning-theme");
+    if (savedTheme) return savedTheme;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  });
 
   const activeTopic = useMemo(
     () => topics.find((topic) => topic.id === activeTopicId),
@@ -47,6 +54,16 @@ function App() {
       console.error("Failed to persist custom topics to localStorage:", error);
     }
   }, [customTopics]);
+
+  // Theme management
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("learning-theme", theme);
+  }, [theme]);
+
+  const handleThemeToggle = () => {
+    setTheme(prevTheme => prevTheme === "light" ? "dark" : "light");
+  };
 
   const handleAddTopic = (formData) => {
     const topicId = editingTopicId
@@ -146,58 +163,122 @@ function App() {
     setCurrentPage("menu");
   };
 
+  const getBreadcrumbs = () => {
+    const breadcrumbs = [{ label: "Home", page: "menu" }];
+
+    if (currentPage === "tools-list") {
+      breadcrumbs.push({ label: "Learning Tools" });
+    } else if (currentPage === "topic-view") {
+      breadcrumbs.push({ label: "Learning Tools", page: "tools-list" });
+      if (activeTopic) {
+        breadcrumbs.push({ label: activeTopic.title });
+      }
+    } else if (currentPage === "add-topic") {
+      breadcrumbs.push({ label: editingTopic ? "Edit Topic" : "Add Topic" });
+    } else if (currentPage === "html-generator") {
+      breadcrumbs.push({ label: editingTopic ? "Edit Course" : "Generate Course" });
+    } else if (currentPage === "settings") {
+      breadcrumbs.push({ label: "Settings" });
+    }
+
+    return breadcrumbs;
+  };
+
+  const breadcrumbs = getBreadcrumbs();
+
   return (
-    <main className="app-shell">
-      <header className="app-header">
-        <h1>Learning Dashboard</h1>
-        <p>Browse modules, open tools, or add new learning topics.</p>
-      </header>
+    <>
+      <a href="#main-content" className="skip-to-main">Skip to main content</a>
+      <main className="app-shell" id="main-content" role="main" aria-label="Learning Dashboard Application">
+        <header className="app-header" role="banner">
+          <div className="header-content">
+            <h1>Learning Dashboard</h1>
+            <ThemeToggle theme={theme} onToggle={handleThemeToggle} />
+          </div>
+          {currentPage !== "menu" && breadcrumbs.length > 1 && (
+            <nav className="breadcrumbs" aria-label="Breadcrumb navigation">
+              {breadcrumbs.map((crumb, index) => (
+                <span key={index} className="breadcrumb-item">
+                  {crumb.page ? (
+                    <button
+                      type="button"
+                      className="breadcrumb-link"
+                      onClick={() => setCurrentPage(crumb.page)}
+                      aria-label={`Go to ${crumb.label}`}
+                    >
+                      {crumb.label}
+                    </button>
+                  ) : (
+                    <span className="breadcrumb-current" aria-current="page">{crumb.label}</span>
+                  )}
+                  {index < breadcrumbs.length - 1 && <span className="breadcrumb-sep" aria-hidden="true">/</span>}
+                </span>
+              ))}
+            </nav>
+          )}
+        </header>
 
-      {currentPage !== "menu" ? (
-        <button type="button" className="back-button" onClick={handleBack}>
-          {currentPage === "topic-view" ? "Back to Learning Topics" : "Back to Menu"}
-        </button>
-      ) : null}
+        {currentPage !== "menu" ? (
+          <button
+            type="button"
+            className="back-button"
+            onClick={handleBack}
+            aria-label={currentPage === "topic-view" ? "Go back to Learning Topics" : "Go back to Menu"}
+          >
+            {currentPage === "topic-view" ? "Back to Learning Topics" : "Back to Menu"}
+          </button>
+        ) : null}
 
-      {currentPage === "menu" ? <MenuPage onSelectPage={handleMenuSelect} /> : null}
+        {currentPage === "menu" ? (
+          <div className="layout-grid">
+            <MenuPage onSelectPage={handleMenuSelect} />
+            <Dashboard
+              totalTopics={topics.length}
+              customTopics={customTopics.length}
+              generatedCourses={customTopics.filter(t => t.sourceType === "generated-course").length}
+              recentTopics={topics.slice(0, 3)}
+            />
+          </div>
+        ) : null}
 
-      {currentPage === "tools-list" ? (
-        <LearningList
-          topics={topics}
-          activeTopicId={activeTopicId}
-          onSelect={handleTopicSelect}
-          onEditTopic={handleEditTopic}
-        />
-      ) : null}
+        {currentPage === "tools-list" ? (
+          <LearningList
+            topics={topics}
+            activeTopicId={activeTopicId}
+            onSelect={handleTopicSelect}
+            onEditTopic={handleEditTopic}
+          />
+        ) : null}
 
-      {currentPage === "topic-view" ? (
-        <LearningViewer topic={activeTopic} onEditTopic={handleEditTopic} />
-      ) : null}
+        {currentPage === "topic-view" ? (
+          <LearningViewer topic={activeTopic} onEditTopic={handleEditTopic} />
+        ) : null}
 
-      {currentPage === "add-topic" ? (
-        <AddTopicForm
-          onAddTopic={handleAddTopic}
-          initialData={editingTopic?.sourceType === "custom" ? editingTopic : null}
-          submitLabel={editingTopicId ? "Update Topic" : "Add Topic"}
-        />
-      ) : null}      {currentPage === "html-generator" ? (
-        <HtmlCourseGenerator
-          onSaveCourse={handleSaveGeneratedCourse}
-          initialData={
-            editingTopic?.sourceType === "generated-course" ? editingTopic.templateData : null
-          }
-          submitLabel={editingTopicId ? "Update Generated Course" : "Save To Learning Topics"}
-        />
-      ) : null}
+        {currentPage === "add-topic" ? (
+          <AddTopicForm
+            onAddTopic={handleAddTopic}
+            initialData={editingTopic?.sourceType === "custom" ? editingTopic : null}
+            submitLabel={editingTopicId ? "Update Topic" : "Add Topic"}
+          />
+        ) : null}      {currentPage === "html-generator" ? (
+          <HtmlCourseGenerator
+            onSaveCourse={handleSaveGeneratedCourse}
+            initialData={
+              editingTopic?.sourceType === "generated-course" ? editingTopic.templateData : null
+            }
+            submitLabel={editingTopicId ? "Update Generated Course" : "Save To Learning Topics"}
+          />
+        ) : null}
 
-      {currentPage === "settings" ? (
-        <SettingsPage
-          onBack={() => setCurrentPage("menu")}
-          onAddTopics={handleImportTopics}
-        />
-      ) : null}
+        {currentPage === "settings" ? (
+          <SettingsPage
+            onBack={() => setCurrentPage("menu")}
+            onAddTopics={handleImportTopics}
+          />
+        ) : null}
 
-    </main>
+      </main>
+    </>
   );
 }
 
