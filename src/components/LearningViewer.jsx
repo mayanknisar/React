@@ -8,16 +8,12 @@ function LearningViewer({ topic, onEditTopic }) {
   const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [readingProgress, setReadingProgress] = useState(0);
-  const [notes, setNotes] = useState("");
 
   // Load bookmarked status from localStorage
   useEffect(() => {
     if (topic?.id) {
       const bookmarks = JSON.parse(localStorage.getItem("learning-bookmarks") || "[]");
       setIsBookmarked(bookmarks.includes(topic.id));
-
-      const saveNotes = localStorage.getItem(`notes-${topic.id}`) || "";
-      setNotes(saveNotes);
     }
   }, [topic?.id]);
 
@@ -34,21 +30,7 @@ function LearningViewer({ topic, onEditTopic }) {
     setIsBookmarked(!isBookmarked);
   };
 
-  const handleSaveNotes = () => {
-    if (topic?.id) {
-      localStorage.setItem(`notes-${topic.id}`, notes);
-    }
-  };
 
-  const handleDownloadNotes = () => {
-    const element = document.createElement("a");
-    const file = new Blob([notes], { type: "text/plain" });
-    element.href = URL.createObjectURL(file);
-    element.download = `${topic?.title}-notes.txt`;
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
-  };
 
   useEffect(() => {
     // HTML injected through dangerouslySetInnerHTML does not execute <script> tags.
@@ -235,38 +217,6 @@ function LearningViewer({ topic, onEditTopic }) {
         ) : null}
       </section>
 
-      {/* Notes Section */}
-      <section className="panel notes-panel">
-        <div className="notes-header">
-          <h3 className="panel-title">📝 My Notes</h3>
-          <div className="notes-actions">
-            <button
-              type="button"
-              className="back-button"
-              onClick={handleSaveNotes}
-              title="Save notes to local storage"
-            >
-              💾 Save
-            </button>
-            <button
-              type="button"
-              className="back-button"
-              onClick={handleDownloadNotes}
-              title="Download notes as text file"
-            >
-              ⬇️ Download
-            </button>
-          </div>
-        </div>
-        <textarea
-          className="notes-textarea"
-          placeholder="Write your notes here... (automatically saved to browser storage)"
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          aria-label="Personal notes for this topic"
-        />
-        <p className="notes-hint">💡 Your notes are saved automatically and will persist when you return to this topic.</p>
-      </section>
     </div>
   );
 }

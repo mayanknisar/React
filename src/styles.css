@@ -5,6 +5,7 @@
   --color-primary: #273c75;
   --color-primary-dark: #1f2f5a;
   --color-primary-light: #3c3c3c;
+  --color-btn-selection-light: lightblue;
   --color-secondary: #40739e;
   --color-accent: #6984c7;
 
@@ -20,6 +21,7 @@
 
   /* Neutral Colors */
   --color-text-primary: #162235;
+  --color-text-Title: #e0e0e0;
   --color-text-secondary: #49566b;
   --color-text-tertiary: #38475d;
   --color-bg-primary: #ffffff;
@@ -283,7 +285,7 @@ body {
 }
 
 .back-button:hover {
-  background: var(--color-primary-light);
+  background: var(--color-btn-selection-light);
   border-color: var(--color-accent);
 }
 
@@ -349,7 +351,7 @@ body {
 
 .topic-card.active {
   border-color: var(--color-primary);
-  background-color: var(--color-primary-light);
+  background-color: var(--color-btn-selection-light);
   box-shadow: var(--shadow-md);
 }
 
@@ -497,54 +499,6 @@ body {
   gap: var(--space-3);
   padding: var(--space-10);
   text-align: center;
-}
-
-/* Notes Panel */
-.notes-panel {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  animation: slideInUp 0.4s ease-out;
-}
-
-.notes-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  flex-wrap: wrap;
-}
-
-.notes-actions {
-  display: flex;
-  gap: var(--space-2);
-}
-
-.notes-textarea {
-  width: 100%;
-  min-height: 200px;
-  padding: var(--space-3);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  font-family: inherit;
-  font-size: var(--font-size-sm);
-  background: var(--color-bg-tertiary);
-  color: var(--color-text-primary);
-  resize: vertical;
-  transition: border-color 0.2s ease;
-}
-
-.notes-textarea:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(39, 60, 117, 0.1);
-}
-
-.notes-hint {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-  margin: 0;
-  font-style: italic;
 }
 
 .html-content {
@@ -1349,6 +1303,9 @@ select:focus-visible {
   --color-bg-tertiary: #2a2a2a;
   --color-border: #3a3a3a;
   --color-border-light: #4a4a4a;
+  --color-btn-selection-light: #3c3c3c;
+  --color-primary: #4a90e2;
+  --color-text-Title: #e0e0e0;
 }
 
 [data-theme="dark"] .app-header {
@@ -1513,7 +1470,7 @@ select:focus-visible {
 
 .recent-item:hover {
   border-color: var(--color-primary);
-  background: var(--color-primary);
+  background: var(--color-btn-selection-light);
   transform: translateX(4px);
 }
 
@@ -1615,7 +1572,7 @@ a:not([class]):focus {
 }
 
 /* Better heading contrast */
-h1,
+
 h2,
 h3,
 h4,
