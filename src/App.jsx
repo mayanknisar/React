@@ -189,7 +189,7 @@ function App() {
   return (
     <>
       <a href="#main-content" className="skip-to-main">Skip to main content</a>
-      <main className="app-shell" id="main-content" role="main" aria-label="Learning Dashboard Application">
+      <main role="main" aria-label="Learning Dashboard Application">
         <header className="app-header" role="banner">
           <div className="header-content">
             <h1>Learning Dashboard</h1>
