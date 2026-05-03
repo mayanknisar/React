@@ -1,4 +1,4 @@
-function LearningList({ topics, activeTopicId, onSelect, onEditTopic }) {
+function LearningList({ topics, activeTopicId, searchQuery, onSearchChange, onSelect, onEditTopic }) {
   const getCategoryColor = (sourceType) => {
     if (sourceType === "custom") return "#22863a";
     if (sourceType === "generated-course") return "#0969da";
@@ -14,6 +14,19 @@ function LearningList({ topics, activeTopicId, onSelect, onEditTopic }) {
   return (
     <section className="panel" aria-label="Learning Topics List">
       <h2 className="panel-title">Learning Topics</h2>
+      <div className="search-toolbar">
+        <input
+          type="search"
+          className="search-input"
+          placeholder="Search by title, category, or description"
+          value={searchQuery}
+          onChange={(e) => onSearchChange?.(e.target.value)}
+          aria-label="Search learning topics"
+        />
+      </div>
+      {topics.length === 0 ? (
+        <p className="no-results">No topics match your search query.</p>
+      ) : null}
       <div className="topic-list" role="listbox" aria-label="Available learning topics">
         {topics.map((topic) => (
           <div
